@@ -32,7 +32,7 @@ services:
         - "127.0.0.1:6379:6379"
   
   stack:
-    image: xoseperez/the-things-stack:latest
+    image: xoseperez/the-things-stack:v1.1.5
     #build:
     #    context: .
     #    args:
