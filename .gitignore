@@ -1,7 +1,0 @@
-application/iot-app/grafana_data/*
-application/iot-app/influx_data/*
-application/iot-app/node_data/flows_cred.json  
-application/iot-app/node_data/flows.json
-application/iot-app/node_data/.flows.json.backup
-application/iot-app/node_data/.flows_cred.json.backup
-application/iot-app/node_data/*
