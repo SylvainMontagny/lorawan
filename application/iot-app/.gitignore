@@ -1,7 +1,1 @@
-grafana_data/*
-influx_data/*
-node_data/flows_cred.json  
-node_data/flows.json
-node_data/.flows.json.backup
-node_data/.flows_cred.json.backup
-node_data/*
+
