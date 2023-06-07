@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  influxdb:
+    image: influxdb:2.6.1
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=!LoRaWAN!
+      - DOCKER_INFLUXDB_INIT_ORG=formation
+      - DOCKER_INFLUXDB_INIT_BUCKET=IoTLoRa
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=Rm9ybWF0aW9uTG9SYVdBTlVuaXZTTUIyMDIzRm9ybWF0aW9uTG9SYVdBTlVuaXZTTUIyMDIzRm9ybWF0aW9uCg==
+      - TZ=Europe/Paris
+      #DOCKER_INFLUXDB_INIT_RETENTION=1w
+    volumes:
+      # Mount for influxdb data directory and configuration
+      - ./influx_data:/var/lib/influxdb2:rw
+    ports:
+      - "8086:8086"
+  telegraf:
+    image: telegraf:1.25-alpine
+    environment:
+      - INFLUX_TOKEN=Rm9ybWF0aW9uTG9SYVdBTlVuaXZTTUIyMDIzRm9ybWF0aW9uTG9SYVdBTlVuaXZTTUIyMDIzRm9ybWF0aW9uCg==
+      - TZ=Europe/Paris
+    depends_on:
+      - influxdb
+    volumes:
+      # Mount for telegraf config
+      - ./telegraf_data:/etc/telegraf:ro
+
