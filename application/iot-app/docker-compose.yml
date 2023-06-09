@@ -1,7 +1,11 @@
 version: '3'
 
-# Compose file for Influxdb, NodeRed, Grafana  
+# ########## IoT Platform #################### 
+#        Influxdb, NodeRed, Grafana          #  
+##############################################
+
 services:
+
   influxdb:
     image: influxdb:2.6.1
     container_name: influxdb
@@ -13,17 +17,14 @@ services:
       - DOCKER_INFLUXDB_INIT_BUCKET=iot-platform
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=U3lsdmFpbk1vbnRhZ255RXN0VW5DaGFtcGlvbl9Gb3JtYXRpb25Mb1JhV0FOX1VuaXZfU2F2b2llXzIwMjMhCg==
       - TZ=Europe/Paris
-      #DOCKER_INFLUXDB_INIT_RETENTION=1w
     volumes:
-      # Mount for influxdb data directory and configuration
       - ./influx_data:/var/lib/influxdb2:rw
     ports:
       - "8086:8086"
-    
+     
   nodered:
     build: ./node_build
     container_name: nodered
-    #image: nodered/node-red:2.2.3-12
     volumes:
      - ./node_data:/data
     ports:
@@ -41,15 +42,5 @@ services:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=univ-lorawan  
        
-       
-        #  telegraf:
-        #image: telegraf:1.25-alpine
-        #environment:
-        # - #INFLUX_TOKEN=Rm9ybWF0aW9uTG9SYVdBTlVuaXZTTUIyMDIzRm9ybWF0aW9uTG9SYVdBTlVuaXZTTUIyMDIzRm9ybWF0aW9uCg==
-        #- TZ=Europe/Paris
-        #depends_on:
-        #- influxdb
-        #volumes:
-      # Mount for telegraf config
-      #- ./telegraf_data:/etc/telegraf:ro
+
 
