@@ -1,9 +1,8 @@
 #!/bin/bash
 #Script to instanciate influxdb - telegraf - grafana 
 #Data are stored in folder iot-app
-path=/home/etudiant
-#path=$(pwd)
-dest_folder=iot-app
+path=/home/debian
+dest_folder=lorawan/application/iot-app
 
 
 function remove_file () {
