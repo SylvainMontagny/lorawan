@@ -1,6 +1,6 @@
 # The Things Stack LoRaWAN Network Server
 
-![The Things Stack CE for Raspberry Pi](https://raw.githubusercontent.com/xoseperez/the-things-stack-docker/master/resources/logo_small.png)
+![The Things Stack CE for Raspberry Pi](https://raw.githubusercontent.com/xoseperez/the-things-stack-docker/master/assets/logo_small.png)
 
 ## Introduction
 
@@ -99,7 +99,7 @@ services:
         - "127.0.0.1:6379:6379"
   
   stack:
-    image: xoseperez/the-things-stack:latest
+    image: xoseperez/the-things-stack
     container_name: stack
     restart: unless-stopped
     depends_on:
@@ -174,6 +174,7 @@ cd the-things-stack-docker
 
 Point your browser to the first local IP of the device or to the domain name (if you have defined one) using HTTPS and use the default credentials (admin/changeme) to log in as administrator.
 
+
 ## Details
 
 ### Resetting values
@@ -181,10 +182,12 @@ Point your browser to the first local IP of the device or to the domain name (if
 Certificates are recreated if TTS_DOMAIN or any TTS_SUBJECT_* variable below changes.
 Database is reset if TTS_DOMAIN, TTS_ADMIN_EMAIL, TTS_ADMIN_PASSWORD or TTS_CONSOLE_SECRET change.
 
-Alternatively you can run the `reset.sh` script fro within the container and restart it.
+Alternatively you can run the `reset_certificates` and `reset_database` scripts in the container and restart it.
 
 ```
-docker exec -it stack /home/thethings/reset.sh
+docker exec stack reset_certificates
+docker exec stack reset_database
+docker restart stack
 ```
 
 ### Configuring the IP and domain
@@ -215,22 +218,23 @@ Then you just have to wait for the domain name to propagate.
 
 ### CLI Auto Login
 
-The `ttn-lw-cli` is a CLI (Command Line Interface) tool that allows you to create or edit gateways and devices and can be very handly to automate tasks. The tool is included and available from within the container but first step to use it is to configure it (`ttn-lw-cli use <lns_ip>`) and login (`ttn-lw-cli login`). By setting the `CLI_AUTO_LOGIN` variable to `true` these initial steps will be done for you by first creating a API key for the admin user and then using it to pre-login the CLI tool. The default value for the `CLI_AUTO_LOGIN` variable is `false` which means that you will have to perform these step manually.
+The `ttn-lw-cli` is a CLI (Command Line Interface) tool that allows you to create or edit gateways and devices and can be very handly to automate tasks. The tool is included and available from within the container but first step to use it is to configure it (`ttn-lw-cli use <lns_ip>`) and login (`ttn-lw-cli login`). By setting the `CLI_AUTO_LOGIN` variable to `true` these initial steps will be done for you by first creating a API key for the admin user and then using it to pre-login the CLI tool. The default value for the `CLI_AUTO_LOGIN` variable is `false` which means that you will have to perform these steps manually.
 
-Either way, manually or automatically, you will be able to run the tool with the usual arguments by typing from the host `docker exec -it stack ttn-lw-cli`. For instance, to create a new gateway you will just have to:
+Either way, manually or automatically, you will be able to run the tool with the usual arguments by typing from the host `docker exec stack ttn-lw-cli`. For instance, to create a new gateway you will just have to:
 
 ```
-docker exec -it stack ttn-lw-cli gateways create my-gateway-001 --user-id admin  --frequency-plan-id EU_863_870 --gateway-eui --gateway-eui 0011223344556677 --enforce-duty-cycle
+docker exec stack ttn-lw-cli gateways create my-gateway-001 --user-id admin --frequency-plan-id EU_863_870 --gateway-eui --gateway-eui 0011223344556677 --enforce-duty-cycle
 ```
 
 ### Packet Broker
 
-The Packet Broker is a service provided by The Things Industries (TTI) that allows peering between networks. To use the Pacet Broker you need:
+The Packet Broker is a service provided by The Things Industries (TTI) that allows peering between networks. To use the Packet Broker you need:
 
 * A NetID provided by the LoRaWAN Alliance or a subrange of addresses from an existing NetID (TTI provides such service)
 * A Packet Broker ID and Secret provided by TTI
 
 If you want to fully integrate your cluster with The Things Network, this can be achieved by configuring TTS_NET_ID to "000013" (NetID owned by The Things Industries) and set the TTS_DEVADDR_RANGE to the range leased from TTI. Then configure the rest of PB_* variables with the info provided by TTI. All these variables must go to the `environment` section in the `stack` service or added as environment variables in the Balena Dashboard.
+
 
 ### Variables
 
@@ -249,10 +253,10 @@ Variable Name | Value | Description | Default
 **TTS_SMTP_USER** | `STRING` | SMTP User |  
 **TTS_SMTP_PASS** | `STRING` | SMTP Password |  
 **TTS_SENDGRID_KEY** | `STRING` | Sendgrid API Key (SMTP_HOST has to be empty in order to use this) | 
-**TTS_SUBJECT_COUNTRY** | `STRING` | Self Certificate country code| ES
-**TTS_SUBJECT_STATE** | `STRING` | Self Certificate state | Catalunya
-**TTS_SUBJECT_LOCATION** | `STRING` | Self Certificate city | Barcelona
-**TTS_SUBJECT_ORGANIZATION** | `STRING` | Self Certificate organization | TTN Catalunya
+**TTS_SUBJECT_COUNTRY** | `STRING` | Generated self-signed certificate: country code | ES
+**TTS_SUBJECT_STATE** | `STRING` | Generated self-signed certificate: state | Catalunya
+**TTS_SUBJECT_LOCATION** | `STRING` | Generated self-signed certificate: city | Barcelona
+**TTS_SUBJECT_ORGANIZATION** | `STRING` | Generated self-signed certificate: organization | TTN Catalunya
 **TTS_NET_ID** | `HEX` | Network ID | 000000
 **TTS_DEVADDR_RANGE** | `HEX/INT` | Device address range | 00000000/7
 **PB_HOME_ENABLE** | `true` or `false` | Network is home network from the Packet Broker point of view | `false`
@@ -263,39 +267,80 @@ Variable Name | Value | Description | Default
 **PB_OAUTH_SECRET** | `STRING` | Packet Broker API secret | 
 **CLI_AUTO_LOGIN** | `true` or `false` | Enable CLI automatic login (see CLI Auto Login section above) | `false`
 
-**Note**: the container uses the `wait` tool (https://github.com/ufoscout/docker-compose-wait) to check that Redis and PostgreSQL are running before starting the stack. The **WAIT_\*** environment variables are there to configure this feature.
+
+### Using custom certificates
+
+To use CA certificates you already have or custom self-signed certificates, you can provide them via [docker secrets](https://docs.docker.com/compose/use-secrets/) uncommenting the corresponding sections of the provided `docker-compose.yml` file:
+
+```
+services:
+
+  ...
+
+  stack:
+
+    ...
+
+    secrets:
+      - ca.pem
+      - cert.pem
+      - key.pem
+
+    ...
+  
+secrets:
+  ca.pem:
+    file: ./ca.pem
+  cert.pem:
+    file: ./cert.pem
+  key.pem:
+    file: ./key.pem
+```
+
+If you want to use the certificate (`cert.pem`) and key (`key.pem`) that you already have, you also need to set the permissions below. If you don’t set these permissions, you may encounter an error resembling `/run/secrets/key.pem: permission denied`. 
+
+```
+sudo chown 886:886 ./cert.pem ./key.pem
+```
+
+When using custom certificates, the `TTS_SUBJECT_*` variables are not used.
+
 
 ## Troubleshooting
 
 ### Certificates errors
 
-If you are having certificates problems or "token rejected" message on the TTS website, try forcing a certificate regeneration:
+If you are having certificates problems or "token rejected" message on the TTS website, double check your domain (`TTS_DOMAIN`) settings. Alternatively try forcing a certificate regeneration:
 
 ```
-docker exec stack ./reset_certs.sh
+docker exec stack reset_certificates
 docker restart stack
 ```
 
-If you reset the certs (by running `reset_certs.sh` or changing any of these variables: `TTS_SUBJECT_COUNTRY`, `TTS_SUBJECT_STATE`, `TTS_SUBJECT_LOCATION`, `TTS_SUBJECT_ORGANIZATION` or `TTS_DOMAIN`) you will need to fetch the new certificate to update any gateways connecting to the server using BasicStation:
+If you reset the certificates (by running `reset_certificates` or changing any of these variables: `TTS_SUBJECT_COUNTRY`, `TTS_SUBJECT_STATE`, `TTS_SUBJECT_LOCATION`, `TTS_SUBJECT_ORGANIZATION` or `TTS_DOMAIN`) you will need to fetch the new certificate to update any gateways connecting to the server using BasicStation:
 
 ```
-docker exec stack ./get_certificate.sh
+docker exec stack get_trust_certificate
 ```
+
+The above does not apply when providing your own custom certificates.
+
 
 ### Database reset
 
 If you are having certificates problems or "token rejected" message on the TTS website, try forcing a certificate regeneration:
 
 ```
-docker exec stack ./reset_db.sh
+docker exec stack reset_database
 docker restart stack
 ```
 
 When the database is reconfigured (because you ran `reset_db.sh` or changed any of these variables: `TTS_ADMIN_EMAIL`, `TTS_ADMIN_PASSWORD`, `TTS_CONSOLE_SECRET` or `TTS_DOMAIN`) the passwords for the admin and the console are overwritten. So if you are logged in as admin you will have to logout and login again with the default password.
 
+
 ### Using The Things Stack with BasicStation
 
-When used together (same machine) with the [BasicStation](https://github.com/xoseperez/basicstation) packet forwarder the following matrix will help you identify working combinations.
+When used together (same machine) with the [BasicStation](https://github.com/xoseperez/basicstation-docker) packet forwarder the following matrix will help you identify working combinations.
 
 |BasicStation<br />configuration|If TTS_DOMAIN is<br />an IP|If TTS_DOMAIN is<br />a domain name|
 |---|:-:|:-:|
@@ -320,12 +365,6 @@ Therefore:
 1. **Using a domain name for your machine is the best option. Set `TTS_DOMAIN` to that name. The name should resolve from the same machine and from the network that will be accessing the server. Use the same domain name everywhere.**
 2. If you cannot have a domain name, you can use the IP of the machine as `TTS_DOMAIN` and bypass any possible certificate errors by setting `TLS_SNI` to `false` in your basicstation service. This is OK for private deployments with self-signed certificates.
 
-## TODO
-
-* Lots of testing :)
-* Testing performance (# of devices) on different platforms
-* Option to use ACME / Let's Encrypt for valid certificates
-* Option to configure a connection to the Packet Broker
 
 ## Attribution
 

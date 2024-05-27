@@ -3,6 +3,7 @@ ARG VERSION
 ARG BUILD_DATE
 ARG ARCH
 ARG REMOTE_TAG
+ARG CFSSL_ARCH=${ARCH}
 
 FROM thethingsnetwork/lorawan-stack:${REMOTE_TAG}
 
@@ -11,6 +12,7 @@ ARG VERSION
 ARG BUILD_DATE
 ARG ARCH
 ARG REMOTE_TAG
+ARG CFSSL_ARCH
 
 # Image metadata
 LABEL maintainer="Xose Pérez <xose.perez@gmail.com>"
@@ -29,8 +31,8 @@ USER root:root
 
 # Certificate creation tools
 RUN apk --update --no-cache add openssl jq
-ADD https://github.com/cloudflare/cfssl/releases/download/1.2.0/cfssl_linux-${ARCH} /usr/bin/cfssl
-ADD https://github.com/cloudflare/cfssl/releases/download/1.2.0/cfssljson_linux-${ARCH} /usr/bin/cfssljson
+ADD https://github.com/cloudflare/cfssl/releases/download/1.2.0/cfssl_linux-${CFSSL_ARCH} /usr/bin/cfssl
+ADD https://github.com/cloudflare/cfssl/releases/download/1.2.0/cfssljson_linux-${CFSSL_ARCH} /usr/bin/cfssljson
 RUN chmod +x /usr/bin/cfssl*
 
 # Data folder
@@ -40,11 +42,9 @@ VOLUME [ "/srv/data" ]
 
 WORKDIR /home/thethings
 
-# Runner code
 COPY runner/* .
-RUN chown thethings:thethings /home/thethings/*
-RUN chmod +x /home/thethings/*.sh
-
+RUN chmod +x start get_trust_certificate reset_certificates reset_database
+ENV PATH="${PATH}:/home/thethings"
 USER thethings:thethings
 
-ENTRYPOINT [ "./entrypoint.sh" ]
+ENTRYPOINT [ "sh", "start" ]

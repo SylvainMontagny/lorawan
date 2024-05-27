@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.2.2 (2024-04-03)
+
+* Option to use custom certificates via docker secrets
+
+## 1.2.1 (2024-03-28)
+
+* Updated to Stack 3.29.2
+* Lite image
+
+## 1.2.0 (2024-03-20)
+
+* Updated to Stack 3.29.1
+* Code clean up
+* Faster boot time (checks for PostgreSQL connection)
+
+## 1.1.8 (2024-02-09)
+
+* Fix static image on docker-compose.yml file
+
+## 1.1.7 (2023-12-18)
+
+* Updated to Stack 3.28.1
+
+## 1.1.6 (2023-09-18)
+
+* Updated to Stack 3.27.2
+
 ## 1.1.5 (2022-12-29)
 
 * Added console.ui.dcs section to ttn-lw-stack-docker (thanks to Davis McCoy for the heads up)
