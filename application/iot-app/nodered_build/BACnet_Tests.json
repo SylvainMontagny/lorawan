@@ -1,0 +1,310 @@
+[
+    {
+        "id": "ddddaa4ccda07f77",
+        "type": "tab",
+        "label": "BACnet_Tests",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ef3b88a4f9984cb5",
+        "type": "group",
+        "z": "ddddaa4ccda07f77",
+        "name": "BACnet Tests",
+        "style": {
+            "label": true,
+            "label-position": "n",
+            "color": "#000000",
+            "fill": "#bfdbef"
+        },
+        "nodes": [
+            "59214a1d9d1f7543",
+            "927fb1f508a281d7",
+            "d4f496fccc9e6ac2",
+            "55458a55a4c86008",
+            "c9c01a7c96d3a73f",
+            "8fcac58cbe9c6c14",
+            "c32050b7c2486ee2",
+            "827b3953d4304661",
+            "a343cd90fa12d47d",
+            "79df6dce5fbd8bf0",
+            "5dec481899a69b02"
+        ],
+        "x": 334,
+        "y": 179,
+        "w": 812,
+        "h": 242
+    },
+    {
+        "id": "59214a1d9d1f7543",
+        "type": "BACnet-Command",
+        "z": "ddddaa4ccda07f77",
+        "g": "ef3b88a4f9984cb5",
+        "name": "Who is ?",
+        "commandType": "whoIs",
+        "timeDuration": 0,
+        "enableDisable": 0,
+        "deviceState": 0,
+        "isUtc": true,
+        "lowLimit": 0,
+        "highLimit": 0,
+        "device": "a0609a711569d7f5",
+        "server": "e0bf099a.ee8468",
+        "x": 840,
+        "y": 220,
+        "wires": [
+            [
+                "8fcac58cbe9c6c14"
+            ]
+        ]
+    },
+    {
+        "id": "927fb1f508a281d7",
+        "type": "BACnet-Write",
+        "z": "ddddaa4ccda07f77",
+        "g": "ef3b88a4f9984cb5",
+        "name": "",
+        "objectType": "0",
+        "instance": "d73587a053000e72",
+        "valueTag": "0",
+        "valueValue": "",
+        "propertyId": "0",
+        "priority": "",
+        "device": "a0609a711569d7f5",
+        "server": "e0bf099a.ee8468",
+        "multipleWrite": false,
+        "x": 860,
+        "y": 380,
+        "wires": [
+            [
+                "827b3953d4304661"
+            ]
+        ]
+    },
+    {
+        "id": "d4f496fccc9e6ac2",
+        "type": "inject",
+        "z": "ddddaa4ccda07f77",
+        "g": "ef3b88a4f9984cb5",
+        "name": "Start \"Who is\"",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 450,
+        "y": 220,
+        "wires": [
+            [
+                "59214a1d9d1f7543"
+            ]
+        ]
+    },
+    {
+        "id": "55458a55a4c86008",
+        "type": "inject",
+        "z": "ddddaa4ccda07f77",
+        "g": "ef3b88a4f9984cb5",
+        "name": "Start Read",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 440,
+        "y": 300,
+        "wires": [
+            [
+                "a343cd90fa12d47d"
+            ]
+        ]
+    },
+    {
+        "id": "c9c01a7c96d3a73f",
+        "type": "inject",
+        "z": "ddddaa4ccda07f77",
+        "g": "ef3b88a4f9984cb5",
+        "name": "Start Write",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 440,
+        "y": 380,
+        "wires": [
+            [
+                "79df6dce5fbd8bf0"
+            ]
+        ]
+    },
+    {
+        "id": "8fcac58cbe9c6c14",
+        "type": "debug",
+        "z": "ddddaa4ccda07f77",
+        "g": "ef3b88a4f9984cb5",
+        "name": "debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "c32050b7c2486ee2",
+        "type": "debug",
+        "z": "ddddaa4ccda07f77",
+        "g": "ef3b88a4f9984cb5",
+        "name": "debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "827b3953d4304661",
+        "type": "debug",
+        "z": "ddddaa4ccda07f77",
+        "g": "ef3b88a4f9984cb5",
+        "name": "debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "a343cd90fa12d47d",
+        "type": "function",
+        "z": "ddddaa4ccda07f77",
+        "g": "ef3b88a4f9984cb5",
+        "name": "Read Configuration",
+        "func": "//////////////////////////////////////////////////\n////////////    TO MODIFY      ///////////////////\n//////////////////////////////////////////////////\n\nlet ipAddress = \"192.168.1.149:59190\"       // @IP:Port\nlet objectType = \"2\"                        // ANALOG_VALUE = \"2\"\nlet objectInstance = 1                      // Instance number \nlet propertyId = \"85\"                       // PRESENT_VALUE = \"85\"\n                                \n\n/////////////////////////////////////////////////\n/////////////   DO NOT MODIFY ///////////////////\n/////////////////////////////////////////////////\n\nreturn {\n    \"payload\": {\n        \"deviceIPAddress\": ipAddress,\n        \"objectId\": {\n            \"type\": objectType,\n            \"instance\": objectInstance\n        },\n        \"propertyId\": propertyId,\n    }\n   \n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 300,
+        "wires": [
+            [
+                "5dec481899a69b02"
+            ]
+        ]
+    },
+    {
+        "id": "79df6dce5fbd8bf0",
+        "type": "function",
+        "z": "ddddaa4ccda07f77",
+        "g": "ef3b88a4f9984cb5",
+        "name": "Write Configuration",
+        "func": "\n//////////////////////////////////////////////////\n////////////    TO MODIFY      ///////////////////\n//////////////////////////////////////////////////\n\nlet ipAddress = \"192.168.1.149:59190\";   // @IP:Port\nlet objectType = \"2\"                       // ANALOG_VALUE = \"2\"\nlet objectInstance = 1                     // Instance number \nlet propertyId = \"85\"                      // PRESENT_VALUE = \"85\"\nlet propertyType = 4                       // REAL = 4 \nlet propertyValue = 20\n\n/////////////////////////////////////////////////\n/////////////   DO NOT MODIFY ///////////////////\n/////////////////////////////////////////////////\n\nreturn {\n    \"payload\": {\n        \"deviceIPAddress\": ipAddress,\n        \"objectId\": {\n            \"type\": objectType,\n            \"instance\": objectInstance\n        },\n        \"propertyId\": propertyId,\n        \"values\": [\n            {\n                \"type\": propertyType,\n                \"value\": propertyValue\n            }\n        ]\n\n    }\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 380,
+        "wires": [
+            [
+                "927fb1f508a281d7"
+            ]
+        ]
+    },
+    {
+        "id": "5dec481899a69b02",
+        "type": "BACnet-Read",
+        "z": "ddddaa4ccda07f77",
+        "g": "ef3b88a4f9984cb5",
+        "name": "",
+        "objectType": "",
+        "instance": "d73587a053000e72",
+        "propertyId": "",
+        "device": "a0609a711569d7f5",
+        "server": "e0bf099a.ee8468",
+        "multipleRead": false,
+        "x": 860,
+        "y": 300,
+        "wires": [
+            [
+                "c32050b7c2486ee2"
+            ]
+        ]
+    },
+    {
+        "id": "a0609a711569d7f5",
+        "type": "BACnet-Device",
+        "name": "void_device",
+        "deviceAddress": ""
+    },
+    {
+        "id": "e0bf099a.ee8468",
+        "type": "BACnet-Client",
+        "name": "Local",
+        "adpuTimeout": "3000",
+        "port": "47808",
+        "interface": "127.0.0.7",
+        "broadcastAddress": "255.255.255.255"
+    },
+    {
+        "id": "d73587a053000e72",
+        "type": "BACnet-Instance",
+        "name": "void_instance",
+        "instanceAddress": ""
+    }
+]

@@ -1,0 +1,674 @@
+[
+    {
+        "id": "4169b67c382c5cc8",
+        "type": "tab",
+        "label": "Interface ",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6b5be50271d0e3f3",
+        "type": "group",
+        "z": "4169b67c382c5cc8",
+        "name": "Interface",
+        "style": {
+            "label": true,
+            "stroke": "#000000",
+            "fill": "#d1d1d1",
+            "label-position": "ne",
+            "color": "#000000"
+        },
+        "nodes": [
+            "ba30700f98e741f9",
+            "3fc81d2d655d7b78",
+            "f8f262af81ee1808",
+            "9088ff93ad3ca0c1",
+            "a437c66e3cf47c54",
+            "ab7568dd7ee0f087",
+            "075d84c2ac837bd1",
+            "4a6ec6e48b26c585",
+            "274e9ef45a7d9851",
+            "ed4918e2fbe2b851",
+            "cc913370111d2f26",
+            "7f173e5c77a1b97a",
+            "e9ee521197a9e41c",
+            "a6e4566d1de83da4",
+            "ecd4619fd78eef12",
+            "1f8061c00e424426",
+            "e074aa939dbee186",
+            "da3b97cea6af28f5",
+            "afce4a57e0420de8",
+            "246f556409d998e1",
+            "3cd6caac8a02ac75",
+            "8621a907adfe3b78",
+            "5b2d97889c47b9a8",
+            "4e8b2f935127561a",
+            "e1a5cdb6d20ef4c8",
+            "07115445ebe53108"
+        ],
+        "x": 34,
+        "y": 39,
+        "w": 952,
+        "h": 442
+    },
+    {
+        "id": "ba30700f98e741f9",
+        "type": "inject",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "trigger",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 130,
+        "y": 140,
+        "wires": [
+            [
+                "3fc81d2d655d7b78"
+            ]
+        ]
+    },
+    {
+        "id": "3fc81d2d655d7b78",
+        "type": "function",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "Requete GET all device",
+        "func": "//global\nlet ip = global.get('g_ip');\nlet akey = global.get('g_akey');\n\n//creation url get commande\nlet url = \"https://\"+ip+\"/api/rest/v2/services/bacnet/local/objects/analog-values\"\n\nvar requete = {\n    \"method\": \"GET\",\n    \"url\": url,\n    \"headers\": {Authorization: akey}\n};\n\nreturn requete;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 140,
+        "wires": [
+            [
+                "f8f262af81ee1808"
+            ]
+        ]
+    },
+    {
+        "id": "f8f262af81ee1808",
+        "type": "http request",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "HTTP REQUEST",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "e133531e8c058541",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 570,
+        "y": 140,
+        "wires": [
+            [
+                "9088ff93ad3ca0c1"
+            ]
+        ]
+    },
+    {
+        "id": "9088ff93ad3ca0c1",
+        "type": "debug",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "Sortie HTTP",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "a437c66e3cf47c54",
+        "type": "inject",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "trigger",
+        "props": [
+            {
+                "p": "instance",
+                "v": "true",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 570,
+        "y": 80,
+        "wires": [
+            [
+                "ab7568dd7ee0f087"
+            ]
+        ]
+    },
+    {
+        "id": "ab7568dd7ee0f087",
+        "type": "function",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "set global ip + akey",
+        "func": "let ip = \"192.168.1.139\";\nlet akey = \"Basic YWRtaW46dW5pdi1sb3Jhd2Fu\";\n\nglobal.set('g_ip', ip);\nglobal.set('g_akey', akey);",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "075d84c2ac837bd1",
+        "type": "inject",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "trigger data",
+        "props": [
+            {
+                "p": "instance",
+                "v": "1",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 200,
+        "wires": [
+            [
+                "4a6ec6e48b26c585"
+            ]
+        ]
+    },
+    {
+        "id": "4a6ec6e48b26c585",
+        "type": "function",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "Requete GET present value",
+        "func": "//global\nlet ip = global.get('g_ip');\nlet akey = global.get('g_akey');\n\n//creation url get commande\nlet url = \"https://\"+ip+\"/api/rest/v2/services/bacnet/local/objects/analog-values/\"+msg.instance+\"/present-value\";\n\nvar requete = {\n    \"method\": \"GET\",\n    \"url\": url,\n    \"headers\": {Authorization: akey}\n};\n\nreturn requete;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 200,
+        "wires": [
+            [
+                "274e9ef45a7d9851"
+            ]
+        ]
+    },
+    {
+        "id": "274e9ef45a7d9851",
+        "type": "http request",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "HTTP REQUEST",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "e133531e8c058541",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 630,
+        "y": 200,
+        "wires": [
+            [
+                "ed4918e2fbe2b851"
+            ]
+        ]
+    },
+    {
+        "id": "ed4918e2fbe2b851",
+        "type": "debug",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "Sortie HTTP",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "cc913370111d2f26",
+        "type": "inject",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "trigger data",
+        "props": [
+            {
+                "p": "instance",
+                "v": "43",
+                "vt": "str"
+            },
+            {
+                "p": "data",
+                "v": "25",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 260,
+        "wires": [
+            [
+                "7f173e5c77a1b97a"
+            ]
+        ]
+    },
+    {
+        "id": "7f173e5c77a1b97a",
+        "type": "function",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "Requete POST present value",
+        "func": "//global\nlet ip = global.get('g_ip');\nlet akey = global.get('g_akey');\n\n//creation url get commande\nlet url = \"https://\"+ip+\"/api/rest/v2/services/bacnet/local/objects/analog-values/\"+msg.instance;\n\nvar requete = {\n    \"method\": \"POST\",\n    \"url\": url,\n    \"headers\": {Authorization: akey,\n                ContentType: \"application/json\"},\n    \"payload\": {\"present-value\": msg.data}\n};\n\nreturn requete;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 260,
+        "wires": [
+            [
+                "e9ee521197a9e41c"
+            ]
+        ]
+    },
+    {
+        "id": "e9ee521197a9e41c",
+        "type": "http request",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "HTTP REQUEST",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "e133531e8c058541",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 630,
+        "y": 260,
+        "wires": [
+            [
+                "a6e4566d1de83da4"
+            ]
+        ]
+    },
+    {
+        "id": "a6e4566d1de83da4",
+        "type": "debug",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "Sortie HTTP",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "ecd4619fd78eef12",
+        "type": "inject",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "trigger data",
+        "props": [
+            {
+                "p": "number",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "name",
+                "v": "Analog Value 3",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 320,
+        "wires": [
+            [
+                "1f8061c00e424426"
+            ]
+        ]
+    },
+    {
+        "id": "1f8061c00e424426",
+        "type": "function",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "Requete CREATE object",
+        "func": "//global\nlet ip = global.get('g_ip');\nlet akey = global.get('g_akey');\n\n//creation url get commande\nlet url = \"https://\"+ip+\"/api/rest/v2/services/bacnet/local/objects/add\";\n\nvar requete = {\n    \"method\": \"POST\",\n    \"url\": url,\n    \"headers\": {Authorization: akey,\n                ContentType: \"application/json\"},\n    \"payload\": {\n        \"object-type\": \"AnalogValue\",\n        \"instance-number\": msg.number,\n        \"name\": msg.name\n    }\n};\n\nreturn requete;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 320,
+        "wires": [
+            [
+                "e074aa939dbee186"
+            ]
+        ]
+    },
+    {
+        "id": "e074aa939dbee186",
+        "type": "http request",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "HTTP REQUEST",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "e133531e8c058541",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 610,
+        "y": 320,
+        "wires": [
+            [
+                "da3b97cea6af28f5"
+            ]
+        ]
+    },
+    {
+        "id": "da3b97cea6af28f5",
+        "type": "debug",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "Sortie HTTP",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 810,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "afce4a57e0420de8",
+        "type": "inject",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "trigger data",
+        "props": [
+            {
+                "p": "instance",
+                "v": "32",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 380,
+        "wires": [
+            [
+                "246f556409d998e1"
+            ]
+        ]
+    },
+    {
+        "id": "246f556409d998e1",
+        "type": "function",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "Requete DELETE object",
+        "func": "//global\nlet ip = global.get('g_ip');\nlet akey = global.get('g_akey');\n\n//creation url get commande\nlet url = \"https://\"+ip+\"/api/rest/v2/services/bacnet/local/objects/analog-values/\"+msg.instance;\n\nvar requete = {\n    \"method\": \"DELETE\",\n    \"url\": url,\n    \"headers\": {Authorization: akey}\n};\n\nreturn requete;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 380,
+        "wires": [
+            [
+                "3cd6caac8a02ac75"
+            ]
+        ]
+    },
+    {
+        "id": "3cd6caac8a02ac75",
+        "type": "http request",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "HTTP REQUEST",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "e133531e8c058541",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 610,
+        "y": 380,
+        "wires": [
+            [
+                "8621a907adfe3b78"
+            ]
+        ]
+    },
+    {
+        "id": "8621a907adfe3b78",
+        "type": "debug",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "Sortie HTTP",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 810,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "5b2d97889c47b9a8",
+        "type": "inject",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "trigger data",
+        "props": [
+            {
+                "p": "ins1",
+                "v": "31",
+                "vt": "str"
+            },
+            {
+                "p": "ins2",
+                "v": "32",
+                "vt": "str"
+            },
+            {
+                "p": "ins3",
+                "v": "33",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 440,
+        "wires": [
+            [
+                "4e8b2f935127561a"
+            ]
+        ]
+    },
+    {
+        "id": "4e8b2f935127561a",
+        "type": "function",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "Requete DELETE multiple object",
+        "func": "//global\nlet ip = global.get('g_ip');\nlet akey = global.get('g_akey');\n\n//creation url get commande\nlet url = \"https://\"+ip+\"/api/rest/v2/batch\";\n\nvar request = {\n  \"method\": \"POST\",\n  \"url\": url,\n  \"headers\": {Authorization: akey,\n                ContentType: \"application/json\"},\n  \"payload\": {\n    \"requests\": [\n        {\n          \"id\": \"1\",\n          \"method\": \"DELETE\",\n          \"url\": \"/api/rest/v2/services/bacnet/local/objects/analog-values/\"+msg.ins1\n        },\n        {\n          \"id\": \"1\",\n          \"method\": \"DELETE\",\n          \"url\": \"/api/rest/v2/services/bacnet/local/objects/analog-values/\"+msg.ins2\n        },\n        {\n          \"id\": \"1\",\n          \"method\": \"DELETE\",\n          \"url\": \"/api/rest/v2/services/bacnet/local/objects/analog-values/\"+msg.ins3\n        }\n      ]\n  }\n};\nreturn request;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 440,
+        "wires": [
+            [
+                "e1a5cdb6d20ef4c8"
+            ]
+        ]
+    },
+    {
+        "id": "e1a5cdb6d20ef4c8",
+        "type": "http request",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "HTTP REQUEST",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "e133531e8c058541",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 670,
+        "y": 440,
+        "wires": [
+            [
+                "07115445ebe53108"
+            ]
+        ]
+    },
+    {
+        "id": "07115445ebe53108",
+        "type": "debug",
+        "z": "4169b67c382c5cc8",
+        "g": "6b5be50271d0e3f3",
+        "name": "Sortie HTTP",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "e133531e8c058541",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    }
+]
