@@ -1,34 +1,30 @@
 #!/bin/bash
 
-# Il faut modifier le chemin absolue pour les volumes de postgre, mosquitto.
-# pour les serveurs de l'univ c'est /root/chirpstack-docker
 
-# I want to create the simplest curl command following the docker api, to  request the creation of this container : 
+# Pull images 
+curl -X POST -H "Content-Type: application/json" \
+--unix-socket /var/run/docker.sock \
+  http://localhost/images/create?fromImage=redis:7-alpine
 
-# postgresqldata create volume
-#curl -X POST -H "Content-Type: application/json" \
-#  --unix-socket /var/run/docker.sock \
-#  -d '{"Name": "postgresqldata"}' \
-#  http://localhost:2375/volumes/create
+curl -X POST -H "Content-Type: application/json" \
+--unix-socket /var/run/docker.sock \
+  http://localhost/images/create?fromImage=postgres:14-alpine
 
-# redisdata create volume
-#curl -X POST -H "Content-Type: application/json" \
- # --unix-socket /var/run/docker.sock \
- # -d '{"Name": "redisdata"}' \
- # http://localhost:2375/volumes/create
+curl -X POST -H "Content-Type: application/json" \
+--unix-socket /var/run/docker.sock \
+  http://localhost/images/create?fromImage=eclipse-mosquitto:2
+
+curl -X POST -H "Content-Type: application/json" \
+--unix-socket /var/run/docker.sock \
+  http://localhost/images/create?fromImage=chirpstack/chirpstack:4.8.1
+  
+curl -X POST -H "Content-Type: application/json" \
+--unix-socket /var/run/docker.sock \
+  http://localhost/images/create?fromImage=chirpstack/chirpstack-gateway-bridge:4.0.11  
 
 
-container_running() {
-    local container_name="$1"
-    local status=$(docker inspect -f '{{.State.Running}}' "$container_name" 2>/dev/null)
-    if [ "$status" == "true" ]; then
-        return 0
-    else
-        return 1
-    fi
-}
 
-# redis create OK
+# Create containers
 curl -X POST -H "Content-Type: application/json" \
   --unix-socket /var/run/docker.sock \
   -d '{
@@ -40,35 +36,25 @@ curl -X POST -H "Content-Type: application/json" \
     },
     "Detach": true
   }' \
-  http://localhost:2375/containers/create?name=redis
-
-# redis start
-curl -X POST \
---unix-socket /var/run/docker.sock \
-http://localhost:2375/containers/redis/start
-
-# postgres create
+http://localhost/containers/create?name=redis
+  
 curl -X POST -H "Content-Type: application/json" \
+	--unix-socket /var/run/docker.sock \
   -d '{
         "Image": "postgres:14-alpine",
         "Env": ["POSTGRES_PASSWORD=root"],
         "HostConfig": {
           "Binds": [
-            "'$(pwd)'/configuration/postgresql/initdb:/docker-entrypoint-initdb.d",
+            "'$(pwd)'/../chirpstack-docker/configuration/postgresql/initdb:/docker-entrypoint-initdb.d",
             "postgresqldata:/var/lib/postgresql/data"
           ],
           "RestartPolicy": {"Name": "unless-stopped"}
         }
       }' \
-  http://localhost:2375/containers/create?name=postgres
+http://localhost/containers/create?name=postgres  
 
-# postgres start
-curl -X POST \
---unix-socket /var/run/docker.sock \
-http://localhost:2375/containers/postgres/start
-
-# mosquitto create
 curl -X POST -H "Content-Type: application/json" \
+	--unix-socket /var/run/docker.sock \
   -d '{
         "Image": "eclipse-mosquitto:2",
         "ExposedPorts": {
@@ -78,33 +64,18 @@ curl -X POST -H "Content-Type: application/json" \
           "PortBindings": {
             "1883/tcp": [{"HostPort": "1883"}]
           },
-          "Binds": ["'$(pwd)'/configuration/mosquitto/config/:/mosquitto/config/"],
+          "Binds": ["'$(pwd)'/../chirpstack-docker/configuration/mosquitto/config/:/mosquitto/config/"],
           "RestartPolicy": {"Name": "unless-stopped"}
         }
       }' \
-  http://localhost:2375/containers/create?name=mosquitto
-
-
-
-# mosquitto start
+http://localhost/containers/create?name=mosquitto
+  
 curl -X POST \
---unix-socket /var/run/docker.sock \
-http://localhost:2375/containers/mosquitto/start
-
-
-  # Check if postgres, redis, and mosquitto are running before starting chirpstack
-while !(container_running postgres && container_running redis && container_running mosquitto); do
-    sleep 1
-done
-
-# chirpstack create
-
-  curl -X POST \
      --unix-socket /var/run/docker.sock \
      -H "Content-Type: application/json" \
      -d '{
-           "Image": "chirpstack/chirpstack:4",
-           "ExposedPorts": {
+           "Image": "chirpstack/chirpstack:4.8.1",
+		   "ExposedPorts": {
             "8080/tcp": {}
             },
            "Env": [
@@ -114,8 +85,8 @@ done
            ],
            "HostConfig": {
              "Binds": [
-               "'$(pwd)'/configuration/chirpstack:/etc/chirpstack",
-               "'$(pwd)'/lorawan-devices:/opt/lorawan-devices"
+               "'$(pwd)'/../chirpstack-docker/configuration/chirpstack:/etc/chirpstack",
+               "'$(pwd)'/../chirpstack-docker/lorawan-devices:/opt/lorawan-devices"
              ],
              "PortBindings": { "8080/tcp": [{ "HostPort": "8080" }] },
              "RestartPolicy": { "Name": "unless-stopped" },
@@ -123,21 +94,13 @@ done
            },
            "Cmd": ["-c", "/etc/chirpstack"]
          }' \
-     http://localhost:2375/containers/create?name=chirpstack
+http://localhost/containers/create?name=chirpstack 
 
-
-
-# chirpstack start
-curl -X POST \
---unix-socket /var/run/docker.sock \
-http://localhost:2375/containers/chirpstack/start
-
-# chirpstack-gateway-bridge creation
 curl -X POST \
      --unix-socket /var/run/docker.sock \
      -H "Content-Type: application/json" \
      -d '{
-           "Image": "chirpstack/chirpstack-gateway-bridge:4",
+           "Image": "chirpstack/chirpstack-gateway-bridge:4.0.11",
             "ExposedPorts": {
               "1700/udp": {}
             },
@@ -148,42 +111,40 @@ curl -X POST \
            ],
            "HostConfig": {
              "Binds": [
-               "'$(pwd)'/configuration/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge"
+               "'$(pwd)'/../chirpstack-docker/configuration/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge"
              ],
              "PortBindings": { "1700/udp": [{ "HostPort": "1700" }] },
              "RestartPolicy": { "Name": "unless-stopped" },
              "Links": ["mosquitto:mosquitto"]
            }
          }' \
-     http://localhost:2375/containers/create?name=chirpstack-gateway-bridge
+     http://localhost/containers/create?name=chirpstack-gateway-bridge
 
 
-# chirpstack-gateway-bridge start
+
+  
+# Start containers
 curl -X POST \
 --unix-socket /var/run/docker.sock \
-http://localhost:2375/containers/chirpstack-gateway-bridge/start
+http://localhost/containers/redis/start
 
-
-
-# chirpstack-rest-api creation
-curl -X POST \
-     --unix-socket /var/run/docker.sock \
-     -H "Content-Type: application/json" \
-     -d '{
-           "Image": "chirpstack/chirpstack-rest-api:4",
-            "ExposedPorts": {
-                "8090/tcp": {}
-            },
-           "Cmd": ["--server", "chirpstack:8080", "--bind", "0.0.0.0:8090", "--insecure"],
-           "HostConfig": {
-             "PortBindings": { "8090/tcp": [{ "HostPort": "8090" }] },
-             "RestartPolicy": { "Name": "unless-stopped" }
-           }
-         }' \
-     http://localhost/containers/create?name=chirpstack-rest-api
-
-
-# chirpstack-rest-api start
 curl -X POST \
 --unix-socket /var/run/docker.sock \
-http://localhost:2375/containers/chirpstack-rest-api/start
+http://localhost/containers/postgres/start
+
+curl -X POST \
+--unix-socket /var/run/docker.sock \
+http://localhost/containers/mosquitto/start
+
+curl -X POST \
+--unix-socket /var/run/docker.sock \
+http://localhost/containers/chirpstack/start
+
+curl -X POST \
+--unix-socket /var/run/docker.sock \
+http://localhost/containers/chirpstack-gateway-bridge/start
+
+
+
+
+
