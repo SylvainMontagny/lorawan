@@ -1,0 +1,91 @@
+volumes:
+  nodered1volume:
+  nodered2volume:
+  nodered3volume:
+  nodered4volume:
+  nodered5volume:
+  nodered6volume:
+  nodered7volume:
+  nodered8volume:
+
+services:
+
+  nodered1:
+    image: montagny/node-red
+    container_name: nodered1
+    restart: unless-stopped
+    environment:
+      - PORT=1880
+    volumes:
+      - 'nodered1volume:/data'
+    network_mode: "host"
+  
+  nodered2:
+    image: montagny/node-red
+    container_name: nodered2
+    restart: unless-stopped
+    environment:
+      - PORT=1879
+    volumes:
+      - 'nodered2volume:/data'
+    network_mode: "host"
+  
+  nodered3:
+    image: montagny/node-red
+    container_name: nodered3
+    restart: unless-stopped
+    environment:
+      - PORT=1878
+    volumes:
+      - 'nodered3volume:/data'
+    network_mode: "host"
+  
+  nodered4:
+    image: montagny/node-red
+    container_name: nodered4
+    restart: unless-stopped
+    environment:
+      - PORT=1877
+    volumes:
+      - 'nodered4volume:/data'
+    network_mode: "host"
+  
+  nodered5:
+    image: montagny/node-red
+    container_name: nodered5
+    restart: unless-stopped
+    environment:
+      - PORT=1876
+    volumes:
+      - 'nodered5volume:/data'
+    network_mode: "host"
+  
+  nodered6:
+    image: montagny/node-red
+    container_name: nodered6
+    restart: unless-stopped
+    environment:
+      - PORT=1875
+    volumes:
+      - 'nodered6volume:/data'
+    network_mode: "host"
+  
+  nodered7:
+    image: montagny/node-red
+    container_name: nodered7
+    restart: unless-stopped
+    environment:
+      - PORT=1874
+    volumes:
+      - 'nodered7volume:/data'
+    network_mode: "host"
+
+  nodered8:
+    image: montagny/node-red
+    container_name: nodered8
+    restart: unless-stopped
+    environment:
+      - PORT=1873
+    volumes:
+      - 'nodered8volume:/data'
+    network_mode: "host"
