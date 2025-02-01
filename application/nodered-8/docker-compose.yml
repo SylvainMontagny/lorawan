@@ -11,7 +11,7 @@ volumes:
 services:
 
   nodered1:
-    image: montagny/node-red
+    image: montagny/node-red:latest
     container_name: nodered1
     restart: unless-stopped
     environment:
@@ -21,7 +21,7 @@ services:
     network_mode: "host"
   
   nodered2:
-    image: montagny/node-red
+    image: montagny/node-red:latest
     container_name: nodered2
     restart: unless-stopped
     environment:
@@ -31,7 +31,7 @@ services:
     network_mode: "host"
   
   nodered3:
-    image: montagny/node-red
+    image: montagny/node-red:latest
     container_name: nodered3
     restart: unless-stopped
     environment:
@@ -41,7 +41,7 @@ services:
     network_mode: "host"
   
   nodered4:
-    image: montagny/node-red
+    image: montagny/node-red:latest
     container_name: nodered4
     restart: unless-stopped
     environment:
@@ -51,7 +51,7 @@ services:
     network_mode: "host"
   
   nodered5:
-    image: montagny/node-red
+    image: montagny/node-red:latest
     container_name: nodered5
     restart: unless-stopped
     environment:
@@ -61,7 +61,7 @@ services:
     network_mode: "host"
   
   nodered6:
-    image: montagny/node-red
+    image: montagny/node-red:latest
     container_name: nodered6
     restart: unless-stopped
     environment:
@@ -71,7 +71,7 @@ services:
     network_mode: "host"
   
   nodered7:
-    image: montagny/node-red
+    image: montagny/node-red:latest
     container_name: nodered7
     restart: unless-stopped
     environment:
@@ -81,7 +81,7 @@ services:
     network_mode: "host"
 
   nodered8:
-    image: montagny/node-red
+    image: montagny/node-red:latest
     container_name: nodered8
     restart: unless-stopped
     environment:
