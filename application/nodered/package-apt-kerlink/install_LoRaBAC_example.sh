@@ -10,18 +10,17 @@ LORABAC_DIR="$HOME/.node-red/examples/lorabac"
 LORABAC_URL="https://raw.githubusercontent.com/SylvainMontagny/LoRaBAC/refs/heads/main/LoRaBAC.json"
 SETTINGS_FILE="$HOME/.node-red/settings.js"
 
-if [! -d "~/.node-red/" ]; then
+if [ ! -d "$HOME/.node-red/" ]; then
     echo Install Node RED before
     exit 0
 fi
 
+# Install LoRaBAC example
+cd $HOME/.node-red/
+
 # Install new modules
 echo Install module node-red-contrib-bacnet...
 npm install node-red-contrib-bacnet
-
-# Install LoRaBAC example
-cd ~
-cd .node-red/
 
 echo Install LoRaBAC example...
 
@@ -44,7 +43,7 @@ if [ ! -d "$LORABAC_DIR" ]; then
 fi
 cd $LORABAC_DIR
 
-wget https://raw.githubusercontent.com/SylvainMontagny/LoRaBAC/refs/heads/main/LoRaBAC.json
+wget $LORABAC_URL
 
 # Add file to configuration
 if ! grep -q "examples:" "$SETTINGS_FILE"; then
