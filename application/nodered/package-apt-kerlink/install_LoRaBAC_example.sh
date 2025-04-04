@@ -28,6 +28,11 @@ cd node_modules/node-red-contrib-bacnet/examples
 
 wget $LORABAC_URL
 
+# Remove first object to add LoRaBAC as a flow and not a new tab
+jq '.[1:]' LoRaBAC.json > LoRaBAC-cleaned.json
+rm --force LoRaBAC.json
+mv LoRaBAC-cleaned.json LoRaBAC.json
+
 systemctl restart node-red
 
 echo "Done!"
