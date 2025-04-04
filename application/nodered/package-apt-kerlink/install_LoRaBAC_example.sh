@@ -48,7 +48,7 @@ wget $LORABAC_URL
 # Add file to configuration
 if ! grep -q "examples:" "$SETTINGS_FILE"; then
     echo "Add example path to $SETTINGS_FILE..."
-    sudo sed -i "/editorTheme: {/a \ \ \ \ examples: { path: \"$LORABAC_DIR\" }," "$SETTINGS_FILE"
+    sudo sed -i "/editorTheme: {/a \ \ \ \ examples: { path: \"$EXAMPLE_DIR\" }," "$SETTINGS_FILE"
 fi
 
 systemctl restart node-red
