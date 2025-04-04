@@ -5,15 +5,18 @@ echo "LoRaBAC example installation"
 echo "############################"
 
 # Variables
-EXAMPLE_DIR="~/.node-red/examples"
-LORABAC_DIR="~/.node-red/examples/lorabac"
+EXAMPLE_DIR="$HOME/.node-red/examples"
+LORABAC_DIR="$HOME/.node-red/examples/lorabac"
 LORABAC_URL="https://raw.githubusercontent.com/SylvainMontagny/LoRaBAC/refs/heads/main/LoRaBAC.json"
-SETTINGS_FILE="~/.node-red/settings.js"
+SETTINGS_FILE="$HOME/.node-red/settings.js"
 
-echo Install LoRaBAC example and BACnet module
+if [! -d "~/.node-red/" ]; then
+    echo Install Node RED before
+    exit 0
+fi
 
 # Install new modules
-echo Install module node-red-contrib-bacnet
+echo Install module node-red-contrib-bacnet...
 npm install node-red-contrib-bacnet
 
 # Install LoRaBAC example
@@ -29,13 +32,13 @@ if [ -f "LoRaBAC.json" ]; then
 fi
 
 # Checks if examples directory exists
-if [! -d "$EXAMPLE_DIR" ]; then
+if [ ! -d "$EXAMPLE_DIR" ]; then
   echo "Create directory $EXAMPLE_DIR."
   mkdir $EXAMPLE_DIR
 fi
 cd $EXAMPLE_DIR
 
-if [! -d "$LORABAC_DIR" ]; then
+if [ ! -d "$LORABAC_DIR" ]; then
   echo "Create directory $LORABAC_DIR."
   mkdir $LORABAC_DIR
 fi

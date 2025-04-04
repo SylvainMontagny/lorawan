@@ -35,5 +35,7 @@ echo If downlink flush is planned, refer to the documentation to install module 
 EUI64=$(grep '^export EUI64=' /run/boardinfo.env | cut -d'"' -f2)
 CODENAME=$(grep '^export CODENAME=' /run/boardinfo.env | cut -d'"' -f2)
 
+echo Done!
+
 # Print Node RED link
 echo "Node RED is now available at: http://klk-"$CODENAME"-"${EUI64:(-6)}".local:1880"

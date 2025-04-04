@@ -132,4 +132,4 @@ CODENAME=$(grep '^export CODENAME=' /run/boardinfo.env | cut -d'"' -f2)
 
 # Print ChirpStack link
 echo "ChirpStack is now available at: http://klk-"$CODENAME"-"${EUI64:(-6)}".local:8080"
-echo "username: admin, password: admin
+echo "username: admin, password: admin"
