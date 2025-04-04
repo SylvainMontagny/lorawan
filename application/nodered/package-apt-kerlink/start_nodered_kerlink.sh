@@ -1,8 +1,8 @@
 #!/bin/bash
 
-echo "#################################"
-echo "Node RED and LoRaBAC installation"
-echo "#################################"
+echo "#####################"
+echo "Node RED installation"
+echo "#####################"
 
 cd /home/admin/
 
@@ -28,23 +28,6 @@ EOF
 mv node-red.rules /etc/iptables/iptables.d/
 
 systemctl restart iptables --quiet
-
-echo Install LoRaBAC flow and Node RED modules
-
-# Install LoRaBAC flow
-cd ~
-cd .node-red/
-wget https://raw.githubusercontent.com/SylvainMontagny/LoRaBAC/refs/heads/main/LoRaBAC.json
-rm --force flows.json
-mv LoRaBAC.json flows.json
-
-# Install new modules
-echo Install module node-red-contrib-bacnet
-npm install node-red-contrib-bacnet
-
-systemctl restart node-red
-
-echo "Done!"
 
 echo If downlink flush is planned, refer to the documentation to install module node-red-contrib-grpc: https://docs.univ-lorawan.fr/fr/sylvain/Gateways-configuration#edge-computing
 
