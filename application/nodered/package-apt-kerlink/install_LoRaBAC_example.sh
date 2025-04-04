@@ -24,32 +24,9 @@ npm install node-red-contrib-bacnet
 
 echo Install LoRaBAC example...
 
-# Looking for LoRaBAC.json
-if [ -f "LoRaBAC.json" ]; then
-    echo LoRaBAC.json already exists here:
-    find -name LoRaBAC.json
-fi
-
-# Checks if examples directory exists
-if [ ! -d "$EXAMPLE_DIR" ]; then
-  echo "Create directory $EXAMPLE_DIR."
-  mkdir $EXAMPLE_DIR
-fi
-cd $EXAMPLE_DIR
-
-if [ ! -d "$LORABAC_DIR" ]; then
-  echo "Create directory $LORABAC_DIR."
-  mkdir $LORABAC_DIR
-fi
-cd $LORABAC_DIR
+cd node_modules/node-red-contrib-bacnet/examples
 
 wget $LORABAC_URL
-
-# Add file to configuration
-if ! grep -q "examples:" "$SETTINGS_FILE"; then
-    echo "Add example path to $SETTINGS_FILE..."
-    sudo sed -i "/editorTheme: {/a \ \ \ \ examples: { path: \"$LORABAC_DIR\" }," "$SETTINGS_FILE"
-fi
 
 systemctl restart node-red
 
