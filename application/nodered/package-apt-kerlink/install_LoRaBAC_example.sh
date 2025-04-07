@@ -24,8 +24,10 @@ npm install node-red-contrib-bacnet
 
 echo Install LoRaBAC example...
 
-cd node_modules/node-red-contrib-bacnet/examples
-
+# Go to examples' file
+cd /usr/lib/node_modules/node-red/node_modules/@node-red/nodes/examples
+mkdir usmb
+cd usmb
 wget $LORABAC_URL
 
 # Remove first object to add LoRaBAC as a flow and not a new tab
@@ -36,4 +38,3 @@ mv LoRaBAC-cleaned.json LoRaBAC.json
 systemctl restart node-red
 
 echo "Done!"
-
