@@ -36,3 +36,4 @@ mv LoRaBAC-cleaned.json LoRaBAC.json
 systemctl restart node-red
 
 echo "Done!"
+
