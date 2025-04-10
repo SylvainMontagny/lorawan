@@ -1,12 +1,10 @@
-
 services:
   chirpstack:
-    image: chirpstack/chirpstack:4.8.1
+    image: chirpstack/chirpstack:4.11
     command: -c /etc/chirpstack
     restart: unless-stopped
     volumes:
       - ./configuration/chirpstack:/etc/chirpstack
-      - ./lorawan-devices:/opt/lorawan-devices
     depends_on:
       - postgres
       - mosquitto
@@ -16,13 +14,13 @@ services:
       - REDIS_HOST=redis
       - POSTGRESQL_HOST=postgres
     ports:
-      - 8080:8080
+      - "8080:8080"
 
   chirpstack-gateway-bridge:
     image: chirpstack/chirpstack-gateway-bridge:4.0.11
     restart: unless-stopped
     ports:
-      - 1700:1700/udp
+      - "1700:1700/udp"
     volumes:
       - ./configuration/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
     environment:
@@ -37,18 +35,18 @@ services:
     restart: unless-stopped
     command: -c /etc/chirpstack-gateway-bridge/chirpstack-gateway-bridge-basicstation-eu868.toml
     ports:
-      - 3001:3001
+      - "3001:3001"
     volumes:
       - ./configuration/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
     depends_on:
       - mosquitto
 
   chirpstack-rest-api:
-    image: chirpstack/chirpstack-rest-api:4.8.1
+    image: chirpstack/chirpstack-rest-api:4.11.0
     restart: unless-stopped
     command: --server chirpstack:8080 --bind 0.0.0.0:8090 --insecure
     ports:
-      - 8090:8090
+      - "8090:8090"
     depends_on:
       - chirpstack
 
@@ -59,7 +57,9 @@ services:
       - ./configuration/postgresql/initdb:/docker-entrypoint-initdb.d
       - postgresqldata:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=chirpstack
+      - POSTGRES_PASSWORD=chirpstack
+      - POSTGRES_DB=chirpstack
 
   redis:
     image: redis:7-alpine
@@ -69,10 +69,10 @@ services:
       - redisdata:/data
 
   mosquitto:
-    image: eclipse-mosquitto:2
+    image: eclipse-mosquitto:2.0.21
     restart: unless-stopped
     ports:
-      - 1883:1883
+      - "1883:1883"
     volumes: 
       - ./configuration/mosquitto/config/:/mosquitto/config/
 
