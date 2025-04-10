@@ -1,0 +1,245 @@
+[
+    {
+        "id": "2c7a4507895b1a6e",
+        "type": "tab",
+        "label": "LHT65",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4a46d5ebbc8c530a",
+        "type": "group",
+        "z": "2c7a4507895b1a6e",
+        "name": "Client MQTT Subscriber",
+        "style": {
+            "label": true,
+            "fill": "#ff7f7f",
+            "fill-opacity": "0.68",
+            "color": "#000000"
+        },
+        "nodes": [
+            "1a161dd3e562dff9",
+            "a8af9e4648fd855e"
+        ],
+        "x": 134,
+        "y": 99,
+        "w": 412,
+        "h": 82
+    },
+    {
+        "id": "6b3a876c3cb25b3a",
+        "type": "group",
+        "z": "2c7a4507895b1a6e",
+        "name": "Dashboard Temperature",
+        "style": {
+            "label": true,
+            "fill": "#7fb7df",
+            "fill-opacity": "0.67",
+            "color": "#000000"
+        },
+        "nodes": [
+            "983a8675ec7a13b9",
+            "6633b02de601132f"
+        ],
+        "x": 114,
+        "y": 199,
+        "w": 492,
+        "h": 82
+    },
+    {
+        "id": "1a161dd3e562dff9",
+        "type": "mqtt in",
+        "z": "2c7a4507895b1a6e",
+        "g": "4a46d5ebbc8c530a",
+        "name": "Subscriber",
+        "topic": "v3/+/devices/+/up",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "22b25a8290d52362",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 220,
+        "y": 140,
+        "wires": [
+            [
+                "a8af9e4648fd855e",
+                "983a8675ec7a13b9"
+            ]
+        ]
+    },
+    {
+        "id": "a8af9e4648fd855e",
+        "type": "debug",
+        "z": "2c7a4507895b1a6e",
+        "g": "4a46d5ebbc8c530a",
+        "name": "Debug Subscriber",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 410,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "983a8675ec7a13b9",
+        "type": "function",
+        "z": "2c7a4507895b1a6e",
+        "g": "6b3a876c3cb25b3a",
+        "name": "Format temperature",
+        "func": "if (msg.payload.hasOwnProperty(\"uplink_message\") \n    && msg.payload.uplink_message.hasOwnProperty(\"decoded_payload\")\n    && msg.payload.uplink_message.decoded_payload.hasOwnProperty(\"TempC_SHT\")) \n{\n    msg.payload = msg.payload.uplink_message.decoded_payload.TempC_SHT;\n}\nelse \n{\n    msg.payload = null;\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "// Le code ajouté ici sera exécuté une fois\n// à chaque démarrage du noeud.\nlet msg = {};\n\nmsg[\"payload\"] = null;\n\nreturn msg;",
+        "finalize": "",
+        "libs": [],
+        "x": 240,
+        "y": 240,
+        "wires": [
+            [
+                "6633b02de601132f"
+            ]
+        ]
+    },
+    {
+        "id": "6633b02de601132f",
+        "type": "ui-gauge",
+        "z": "2c7a4507895b1a6e",
+        "g": "6b3a876c3cb25b3a",
+        "name": "Temperature gauge",
+        "group": "68a7c95de07f66bd",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Temperature",
+        "units": "°C",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "10",
+                "color": "#5cbed6"
+            },
+            {
+                "from": "17",
+                "color": "#25db00"
+            },
+            {
+                "from": "30",
+                "color": "#ea5353"
+            }
+        ],
+        "min": "10",
+        "max": "40",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 490,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "22b25a8290d52362",
+        "type": "mqtt-broker",
+        "name": "TTN",
+        "broker": "eu1.cloud.thethings.network",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "68a7c95de07f66bd",
+        "type": "ui-group",
+        "name": "Temperature LHT65",
+        "page": "cf9d85bea3423d91",
+        "width": "6",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "cf9d85bea3423d91",
+        "type": "ui-page",
+        "name": "LHT65",
+        "ui": "31a1de2e1b356c56",
+        "path": "/lht65",
+        "icon": "database",
+        "layout": "grid",
+        "theme": "1448f9f5fa7929c3",
+        "order": 3,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "31a1de2e1b356c56",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "navigationStyle": "fixed",
+        "titleBarStyle": "fixed"
+    },
+    {
+        "id": "1448f9f5fa7929c3",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    }
+]
