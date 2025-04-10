@@ -203,7 +203,7 @@
         "ui": "31a1de2e1b356c56",
         "path": "/lht65",
         "icon": "database",
-        "layout": "grid",
+        "layout": "notebook",
         "theme": "1448f9f5fa7929c3",
         "order": 3,
         "className": "",
