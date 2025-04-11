@@ -14,12 +14,8 @@ services:
       - REDIS_HOST=redis
       - POSTGRESQL_HOST=postgres
     ports:
-<<<<<<< HEAD
-      - "8080:8080"
-=======
-      - 8080:8080 #Gui
-      - 9000:9000 #Backend Interface
->>>>>>> flo-roaming
+      - "8080:8080" #Gui
+      - "9000:9000" #Backend Interface
 
   chirpstack-gateway-bridge:
     image: chirpstack/chirpstack-gateway-bridge:4.0.11
