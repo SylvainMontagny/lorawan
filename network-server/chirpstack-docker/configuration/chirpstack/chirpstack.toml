@@ -98,7 +98,7 @@
   secret="you-must-replace-this"
 
 [backend_interfaces]
-  bind="0.0.0.0:8091"
+  bind="0.0.0.0:9000"
 
 [integration]
   enabled=["mqtt"]
@@ -115,4 +115,4 @@
 #    async_timeout="0s"
 #    passive_roaming_lifetime="0s"
 #    passive_roaming_validate_mic=false
-#    server="http://flo-test-nsb.univ-lorawan.fr:8091"
+#    server="http://flo-test-nsb.univ-lorawan.fr:9000"
