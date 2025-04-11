@@ -107,12 +107,12 @@
     server="tcp://$MQTT_BROKER_HOST:1883/"
     json=true
 
-[roaming]
-  resolve_net_id_domain_suffix=""
-
-  [[roaming.servers]]
-    net_id="C000BB"
-    async_timeout="0s"
-    passive_roaming_lifetime="0s"
-    passive_roaming_validate_mic=false
-    server="http://flo-test-nsb.univ-lorawan.fr:8091"
+#[roaming]
+#  resolve_net_id_domain_suffix=""
+#
+#  [[roaming.servers]]
+#    net_id="C000BB"
+#    async_timeout="0s"
+#    passive_roaming_lifetime="0s"
+#    passive_roaming_validate_mic=false
+#    server="http://flo-test-nsb.univ-lorawan.fr:8091"
