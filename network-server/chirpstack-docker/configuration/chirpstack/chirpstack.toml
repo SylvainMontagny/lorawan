@@ -58,7 +58,7 @@
 [network]
 
   # Network identifier (NetID, 3 bytes) encoded as HEX (e.g. 010203).
-  net_id="000000"
+  net_id="C000AA"
 
   # Enabled regions.
   #
