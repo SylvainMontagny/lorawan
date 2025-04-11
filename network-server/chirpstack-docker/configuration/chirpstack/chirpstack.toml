@@ -97,6 +97,8 @@
   #   openssl rand -base64 32
   secret="you-must-replace-this"
 
+[backend_interfaces]
+  bind="0.0.0.0:8091"
 
 [integration]
   enabled=["mqtt"]
