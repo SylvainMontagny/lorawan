@@ -9,8 +9,12 @@ services:
     container_name: nodered
     volumes:
      - ./node_data:/data
+     - ./scripts:/scripts
+     - ./entrypoint.sh:/entrypoint.sh
     ports:
-      - "1880:1880"  
+      - "1880:1880"
+    user: root
+    entrypoint: [ "bash", "/entrypoint.sh" ] 
       
   influxdb:
     image: influxdb:2.6.1
