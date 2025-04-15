@@ -76,9 +76,9 @@ mv lht65-cleaned.json formation-collectivites/lht65.json
 
 ###########################################################################
 
-echo "##########################"
+echo "#############################"
 echo "mqtt_ttn example installation"
-echo "##########################"
+echo "#############################"
 
 if [ -f formation-collectivites/mqtt_ttn.json ]; then
     echo Update mqtt_ttn
@@ -91,5 +91,20 @@ wget https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/a
 jq '.[1:]' mqtt_ttn.json > mqtt_ttn-cleaned.json
 rm -f mqtt_ttn.json
 mv mqtt_ttn-cleaned.json formation-collectivites/mqtt_ttn.json
+
+###########################################################################
+
+echo "#################################"
+echo "ttn_influxdb example installation"
+echo "#################################"
+
+if [ -f formation-lorawan/ttn_influxdb.json ]; then
+    echo Update ttn_influxdb
+    rm formation-lorawan/ttn_influxdb.json
+fi
+
+wget https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-lorawan/ttn_influxdb.json
+
+mv ttn_influxdb.json formation-lorawan/ttn_influxdb.json
 
 echo "Done!"
