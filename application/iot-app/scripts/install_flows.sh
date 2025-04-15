@@ -98,6 +98,10 @@ echo "#################################"
 echo "ttn_influxdb example installation"
 echo "#################################"
 
+if [ ! -d formation-lorawan ]; then
+    mkdir formation-lorawan
+fi
+
 if [ -f formation-lorawan/ttn_influxdb.json ]; then
     echo Update ttn_influxdb
     rm formation-lorawan/ttn_influxdb.json
