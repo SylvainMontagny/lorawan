@@ -14,9 +14,10 @@ apk add jq
 ##### TEMPLATE #####
 # ###########################################################################
 
-# echo "##########################"
-# echo "FLOW_NAME example installation"
-# echo "##########################"
+# echo
+# echo FLOW_NAME example installation
+# echo ==============================
+# echo
 
 # if [ ! -d FOLDER_NAME ]; then
 #     mkdir FOLDER_NAME
@@ -36,9 +37,10 @@ apk add jq
 
 ###########################################################################
 
-echo "############################"
-echo "LoRaBAC example installation"
-echo "############################"
+echo
+echo LoRaBAC example installation
+echo ============================
+echo
 
 if [ ! -d usmb ]; then
     mkdir usmb
@@ -54,9 +56,10 @@ mv LoRaBAC.json usmb/LoRaBAC.json
 
 ###########################################################################
 
-echo "##########################"
-echo "lht65 example installation"
-echo "##########################"
+echo
+echo lht65 example installation
+echo ==========================
+echo
 
 if [ ! -d formation-collectivites ]; then
     mkdir formation-collectivites
@@ -76,9 +79,10 @@ mv lht65-cleaned.json formation-collectivites/lht65.json
 
 ###########################################################################
 
-echo "#############################"
-echo "mqtt_ttn example installation"
-echo "#############################"
+echo
+echo mqtt_ttn example installation
+echo =============================
+echo
 
 if [ -f formation-collectivites/mqtt_ttn.json ]; then
     echo Update mqtt_ttn
@@ -94,9 +98,10 @@ mv mqtt_ttn-cleaned.json formation-collectivites/mqtt_ttn.json
 
 ###########################################################################
 
-echo "#################################"
-echo "ttn_influxdb example installation"
-echo "#################################"
+echo 
+echo ttn_influxdb example installation
+echo =================================
+echo
 
 if [ ! -d formation-lorawan ]; then
     mkdir formation-lorawan
@@ -111,4 +116,6 @@ wget https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/a
 
 mv ttn_influxdb.json formation-lorawan/ttn_influxdb.json
 
+echo
 echo "Done!"
+echo
