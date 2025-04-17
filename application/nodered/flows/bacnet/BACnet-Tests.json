@@ -37,6 +37,27 @@
         "h": 242
     },
     {
+        "id": "a0609a711569d7f5",
+        "type": "BACnet-Device",
+        "name": "void_device",
+        "deviceAddress": ""
+    },
+    {
+        "id": "e0bf099a.ee8468",
+        "type": "BACnet-Client",
+        "name": "Local",
+        "adpuTimeout": "2000",
+        "port": "47808",
+        "interface": "127.0.0.1",
+        "broadcastAddress": "255.255.255.255"
+    },
+    {
+        "id": "d73587a053000e72",
+        "type": "BACnet-Instance",
+        "name": "void_instance",
+        "instanceAddress": ""
+    },
+    {
         "id": "59214a1d9d1f7543",
         "type": "BACnet-Command",
         "z": "ddddaa4ccda07f77",
@@ -232,8 +253,9 @@
         "z": "ddddaa4ccda07f77",
         "g": "ef3b88a4f9984cb5",
         "name": "Read Configuration",
-        "func": "//////////////////////////////////////////////////\n////////////    TO MODIFY      ///////////////////\n//////////////////////////////////////////////////\n\nlet ipAddress = \"192.168.1.149:59190\"       // @IP:Port\nlet objectType = \"2\"                        // ANALOG_VALUE = \"2\"\nlet objectInstance = 1                      // Instance number \nlet propertyId = \"85\"                       // PRESENT_VALUE = \"85\"\n                                \n\n/////////////////////////////////////////////////\n/////////////   DO NOT MODIFY ///////////////////\n/////////////////////////////////////////////////\n\nreturn {\n    \"payload\": {\n        \"deviceIPAddress\": ipAddress,\n        \"objectId\": {\n            \"type\": objectType,\n            \"instance\": objectInstance\n        },\n        \"propertyId\": propertyId,\n    }\n   \n}\n\n",
+        "func": "//////////////////////////////////////////////////\n////////////    TO MODIFY      ///////////////////\n//////////////////////////////////////////////////\n\nlet ipAddress = \"192.168.1.149:55888\"       // @IP:Port\nlet objectType = 2                          // ANALOG_VALUE = 2\nlet objectInstance = 1                      // Instance number \nlet propertyId = 85                         // PRESENT_VALUE = 85\n                                \n\n/////////////////////////////////////////////////\n/////////////   DO NOT MODIFY ///////////////////\n/////////////////////////////////////////////////\n\nreturn {\n    \"payload\": {\n        \"deviceIPAddress\": ipAddress,\n        \"objectId\": {\n            \"type\": objectType,\n            \"instance\": objectInstance\n        },\n        \"propertyId\": propertyId,\n    }\n   \n}\n\n",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -252,8 +274,9 @@
         "z": "ddddaa4ccda07f77",
         "g": "ef3b88a4f9984cb5",
         "name": "Write Configuration",
-        "func": "\n//////////////////////////////////////////////////\n////////////    TO MODIFY      ///////////////////\n//////////////////////////////////////////////////\n\nlet ipAddress = \"192.168.1.149:59190\";   // @IP:Port\nlet objectType = \"2\"                       // ANALOG_VALUE = \"2\"\nlet objectInstance = 1                     // Instance number \nlet propertyId = \"85\"                      // PRESENT_VALUE = \"85\"\nlet propertyType = 4                       // REAL = 4 \nlet propertyValue = 20\n\n/////////////////////////////////////////////////\n/////////////   DO NOT MODIFY ///////////////////\n/////////////////////////////////////////////////\n\nreturn {\n    \"payload\": {\n        \"deviceIPAddress\": ipAddress,\n        \"objectId\": {\n            \"type\": objectType,\n            \"instance\": objectInstance\n        },\n        \"propertyId\": propertyId,\n        \"values\": [\n            {\n                \"type\": propertyType,\n                \"value\": propertyValue\n            }\n        ]\n\n    }\n}\n",
+        "func": "\n//////////////////////////////////////////////////\n////////////    TO MODIFY      ///////////////////\n//////////////////////////////////////////////////\n\nlet ipAddress = \"192.168.1.149:59190\";   // @IP:Port\nlet objectType = 2                       // ANALOG_VALUE = 2\nlet objectInstance = 1                   // Instance number \nlet propertyId = 85                      // PRESENT_VALUE = 85\nlet propertyType = 4                     // REAL = 4 \nlet propertyValue = 20\n\n/////////////////////////////////////////////////\n/////////////   DO NOT MODIFY ///////////////////\n/////////////////////////////////////////////////\n\nreturn {\n    \"payload\": {\n        \"deviceIPAddress\": ipAddress,\n        \"objectId\": {\n            \"type\": objectType,\n            \"instance\": objectInstance\n        },\n        \"propertyId\": propertyId,\n        \"values\": [\n            {\n                \"type\": propertyType,\n                \"value\": propertyValue\n            }\n        ]\n\n    }\n}\n",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -287,24 +310,24 @@
         ]
     },
     {
-        "id": "a0609a711569d7f5",
-        "type": "BACnet-Device",
-        "name": "void_device",
-        "deviceAddress": ""
+        "id": "36c16f5af8303604",
+        "type": "comment",
+        "z": "ddddaa4ccda07f77",
+        "name": "WARNING: Please check the BACnet source port availability on your host (where this flow is running). \\n You can use the following command in a terminal (MobaXterm): \\n netstat -anp | grep -e \"47808\" -e \"47809\" -e \"47810\" -e \"47811\" -e \"47812\" -e \"47813\" -e \"47814\" -e \"47815\" -e \"47816\" -e \"47817\" -e \"47818\"\\n     1. Pick up a port that doesn't show up.\\n     2. Open a BACnet Read or Write node.\\n 3. Configure the Client with the available port number .",
+        "info": "netstat -anp | grep -e \"47808\" -e \"47809\" -e \"47810\" -e \"47811\" -e \"47812\" -e \"47813\" -e \"47814\" -e \"47815\" -e \"47816\" -e \"47817\" -e \"47818\"\n",
+        "x": 750,
+        "y": 80,
+        "wires": [],
+        "icon": "node-red/alert.svg"
     },
     {
-        "id": "e0bf099a.ee8468",
-        "type": "BACnet-Client",
-        "name": "Local",
-        "adpuTimeout": "3000",
-        "port": "47808",
-        "interface": "127.0.0.7",
-        "broadcastAddress": "255.255.255.255"
-    },
-    {
-        "id": "d73587a053000e72",
-        "type": "BACnet-Instance",
-        "name": "void_instance",
-        "instanceAddress": ""
+        "id": "a6bec49e86a43f39",
+        "type": "comment",
+        "z": "ddddaa4ccda07f77",
+        "name": "HOW TO USE IT ? \\n 1. Open the \"Read Configuration\" node \\n 2. Change the IP address and port. \\n 3. Deploy and press \"Start Read\"",
+        "info": "netstat -anp | grep -e \"47808\" -e \"47809\" -e \"47810\" -e \"47811\" -e \"47812\" -e \"47813\" -e \"47814\" -e \"47815\" -e \"47816\" -e \"47817\" -e \"47818\"\n",
+        "x": 750,
+        "y": 500,
+        "wires": []
     }
 ]
