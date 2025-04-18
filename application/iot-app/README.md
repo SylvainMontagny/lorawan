@@ -13,6 +13,15 @@ Change:
 
 Make sure the URL correspond to raw file (for GitHub): on GitHub, go to your file, click on the top right button `Raw` and get the URL.
 
+**Other way**:
+Use the function `add_flow` like in the following example: 
+
+```bash
+add_flow "LoRaBAC.json" "bacnet" "URL/to/raw/LoRaBAC.json" true
+```
+
+The last option allow you to import the exemple as a flow (`true`) or flow + tab. If the imported example is an empty flow, change this option to anything else but not true.
+
 To import the json example as a flow (and not a table), make sure the first json object is a tab and keep the `jq` function. This will simply delete the first tab object.
 
 The newly added flow will be stored in `Examples > flows > node-red > FOLDER_NAME`. Find it in Node RED in `Menu > Import > Examples`.
