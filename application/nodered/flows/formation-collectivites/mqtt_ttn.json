@@ -530,16 +530,6 @@
         "wires": []
     },
     {
-        "id": "900fd726b1e4015e",
-        "type": "ui_spacer",
-        "z": "d9fade303287df23",
-        "name": "spacer",
-        "group": "c9a82e7f682a4a3a",
-        "order": 2,
-        "width": 1,
-        "height": 1
-    },
-    {
         "id": "22b25a8290d52362",
         "type": "mqtt-broker",
         "name": "TTN",
@@ -610,17 +600,6 @@
         "disabled": "false"
     },
     {
-        "id": "c9a82e7f682a4a3a",
-        "type": "ui_group",
-        "name": "Received data",
-        "tab": "9426a2b33d1b245e",
-        "order": 4,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
         "id": "aea0e6f7d47e0682",
         "type": "ui-page",
         "name": "Temperature",
@@ -647,15 +626,6 @@
         "className": "",
         "visible": "true",
         "disabled": "false"
-    },
-    {
-        "id": "9426a2b33d1b245e",
-        "type": "ui_tab",
-        "name": "My Dashboard",
-        "icon": "dashboard",
-        "order": 1,
-        "disabled": false,
-        "hidden": false
     },
     {
         "id": "31a1de2e1b356c56",
