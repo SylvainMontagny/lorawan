@@ -74,7 +74,7 @@
         "id": "a5b50f4b925122cc",
         "type": "group",
         "z": "d9fade303287df23",
-        "name": "Dashboard Sebd data",
+        "name": "Dashboard Send Data",
         "style": {
             "label": true,
             "fill": "#7fb7df",
