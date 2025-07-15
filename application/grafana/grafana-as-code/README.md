@@ -1,8 +1,10 @@
 # Grafana As Code
 
-## Fonctionnement
+## Objectif
 
-![schema_fonctionnement](pictures/jsonnet_only.png)
+Provisionner les mises à jours d'un tableau de bord modèle vers pusieurs serveurs.
+
+![schema_fonctionnement](images/SchemaAimGaC.png)
 
 ## Glossaire
 [**Terraform**](https://fr.wikipedia.org/wiki/Terraform_(logiciel)) : environnement logiciel d'« infrastructure as code » publié par la société HashiCorp. Cet outil permet d'automatiser la construction des ressources d'une infrastructure de centre de données comme un réseau, des machines virtuelles, un groupe de sécurité ou une base de données.
@@ -199,7 +201,7 @@ Les datasources sont visibles ici :
 ├── jsonnetfile.lock.json
 ├── terraform.tfstate
 ├── terraform.tfstate.backup
-├── pictures ...
+├── images ...
 └── vendor ...
 ```
 
