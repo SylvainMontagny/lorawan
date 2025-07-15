@@ -7,5 +7,6 @@ terraform.tfstate.backup
 .terraform
 extractInfo.py
 notes_grafana_as_code.txt
-pictures/schematics.pptx
+images/schematics.pptx
 config_provider.json
+terraform.tfstate.backup
