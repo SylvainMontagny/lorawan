@@ -1,0 +1,11 @@
+vendor/
+jsonnetfile.lock.json
+output.json
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+.terraform
+extractInfo.py
+notes_grafana_as_code.txt
+pictures/schematics.pptx
+config_provider.json

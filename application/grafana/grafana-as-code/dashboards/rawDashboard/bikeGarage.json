@@ -1,0 +1,638 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 22,
+    "links": [],
+    "panels": [
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "cdqpojn08j6kgc"
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 5,
+        "options": {
+          "code": {
+            "language": "plaintext",
+            "showLineNumbers": false,
+            "showMiniMap": false
+          },
+          "content": "# CROMA & LAMA Bike Garage \nThis dashboard shows all the information relatives to the bicycle garage, \nnext to the Croma and Lama's laboratoria. The panel _**Today's opened doors**_ \ndisplays the number of time the garage's door opens during the current day. \nThe period of the graphs is not adjustable.",
+          "mode": "markdown"
+        },
+        "pluginVersion": "11.0.1",
+        "type": "text"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "cdqpojn08j6kgc"
+        },
+        "description": "Number of opened doors during the currrent day",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": true,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisGridShow": true,
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "axisSoftMin": 1,
+              "fillOpacity": 50,
+              "gradientMode": "hue",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineWidth": 1,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "fieldMinMax": false,
+            "mappings": [],
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 10
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 10,
+          "w": 18,
+          "x": 0,
+          "y": 3
+        },
+        "id": 1,
+        "options": {
+          "barRadius": 0.15,
+          "barWidth": 0.87,
+          "fullHighlight": false,
+          "groupWidth": 0.7,
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": false
+          },
+          "orientation": "auto",
+          "showValue": "never",
+          "stacking": "none",
+          "tooltip": {
+            "maxHeight": 600,
+            "mode": "single",
+            "sort": "none"
+          },
+          "xField": "Time",
+          "xTickLabelRotation": -45,
+          "xTickLabelSpacing": 0
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "cdqpojn08j6kgc"
+            },
+            "query": "import \"experimental\"\r\nimport \"date\"\r\n\r\nfrom(bucket: \"sacha\")\r\n  |> range(start: experimental.addDuration(d: 5h, to: date.sub(from:today(), d:${timeRange})), stop: experimental.addDuration(d: 20h, to: date.sub(from:today(), d:${timeRange})))\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"value\")\r\n  |> filter(fn: (r) => r[\"deviceName\"] == \"porte-garage-velo\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"DoorWindow_Event\")\r\n  |> filter(fn: (r) => r[\"batiment\"] == \"garage-velo\")\r\n  |> aggregateWindow(every: 30m, fn: count, createEmpty: true)\r\n  |> yield(name: \"count\")",
+            "refId": "A"
+          }
+        ],
+        "title": "Opened doors' evolution ",
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {},
+              "includeByName": {},
+              "indexByName": {},
+              "renameByName": {
+                "DoorWindow_Event {applicationName=\"sacha\", batiment=\"garage-velo\", devEui=\"7894e80000036870\", deviceName=\"porte-garage-velo\", host=\"f289ed10b8da\", site=\"Bourget\"}": "Number of opened doors",
+                "Time": "Time"
+              }
+            }
+          }
+        ],
+        "type": "barchart"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "cdqpojn08j6kgc"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 12
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 10,
+          "w": 6,
+          "x": 18,
+          "y": 3
+        },
+        "id": 3,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "pluginVersion": "11.0.1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "cdqpojn08j6kgc"
+            },
+            "query": "import \"experimental\"\r\nimport \"date\"\r\n\r\nstartRequest = date.sub(from:today(), d:${timeRange})\r\n\r\nfrom(bucket: \"sacha\")\r\n  |> range(start: startRequest, stop: date.add(to:startRequest, d:1d))\r\n  |> filter(fn: (r) => r[\"batiment\"] == \"garage-velo\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"DoorWindow_Event\")\r\n  |> count(column: \"_value\")\r\n  |> yield(name: \"sum\")",
+            "refId": "A"
+          }
+        ],
+        "title": "Opened doors ${timeRange}",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "cdqpojn08j6kgc"
+        },
+        "description": "Compare the number of stored bikes evolution between the current week and last week",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "fillOpacity": 90,
+              "gradientMode": "opacity",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineWidth": 1,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "thresholdsStyle": {
+                "mode": "area"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 9
+                },
+                {
+                  "color": "red",
+                  "value": 12
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byRegexp",
+                "options": "/.*/"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "mode": "palette-classic"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "week 14"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "light-blue",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "week 13"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "yellow",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 18,
+          "x": 0,
+          "y": 13
+        },
+        "hideTimeOverride": false,
+        "id": 2,
+        "maxDataPoints": 2000,
+        "options": {
+          "barRadius": 0.1,
+          "barWidth": 0.97,
+          "fullHighlight": false,
+          "groupWidth": 0.7,
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "right",
+            "showLegend": true
+          },
+          "orientation": "auto",
+          "showValue": "auto",
+          "stacking": "none",
+          "tooltip": {
+            "maxHeight": 600,
+            "mode": "single",
+            "sort": "none"
+          },
+          "xTickLabelRotation": 0,
+          "xTickLabelSpacing": 0
+        },
+        "pluginVersion": "11.0.1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "cdqpojn08j6kgc"
+            },
+            "hide": false,
+            "query": "import \"date\"\r\nimport \"experimental/date/boundaries\"\r\nimport \"math\"\r\n\r\nweekDays = [\"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\"]\r\n\r\nstartWeek = boundaries.week(week_offset:-1).start\r\nendWeek = boundaries.week().stop\r\n\r\nfrom(bucket: \"sacha\")\r\n  |> range(start: startWeek, stop: endWeek)\r\n  |> filter(fn: (r) => r[\"batiment\"] == \"garage-velo\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"DoorWindow_Event\")\r\n  |> filter(fn: (r) => r[\"_value\"] == \"Open\")\r\n  |> aggregateWindow(every: 1d, offset: 0s, timeSrc: \"_start\", fn: count, createEmpty: true)\r\n  |> map(fn: (r) => ({r with dayOfWeek: weekDays[date.weekDay(t: r._time)]}))\r\n  |> map(fn: (r) => ({ r with nbBikes: math.floor(x:float(v: r._value + 1) * 0.5) }))\r\n  |> map(fn: (r) => ({r with week: \"week \" + string(v: date.week(t: r._time))}))\r\n  |> timeShift(duration: 1d)\r\n  |> pivot(rowKey: [\"dayOfWeek\"], columnKey: [\"week\"], valueColumn: \"nbBikes\")\r\n  |> drop(columns: [\"_field\", \"_start\", \"_stop\", \"batiment\", \"applicationName\", \"devEui\", \"deviceName\", \"host\", \"name\", \"site\", \"_measurement\", \"_time\", \"_value\"])\r\n",
+            "refId": "Current week"
+          }
+        ],
+        "title": "Number of bikes stored",
+        "type": "barchart"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "cdqpojn08j6kgc"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 200
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 6,
+          "x": 18,
+          "y": 13
+        },
+        "id": 4,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "value_and_name",
+          "wideLayout": true
+        },
+        "pluginVersion": "11.0.1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "cdqpojn08j6kgc"
+            },
+            "query": "import \"experimental/date/boundaries\"\r\nimport \"math\"\r\n\r\nfrom(bucket: \"sacha\")\r\n  |> range(start: boundaries.month().start, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"batiment\"] == \"garage-velo\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"DoorWindow_Event\")\r\n  |> count(column: \"_value\")\r\n  |> map(fn: (r) => ({r with nbBikes: math.floor(x:float(v: r._value + 1) * 0.5)}))\r\n  |> drop(columns: [\"_field\", \"_start\", \"_stop\", \"applicationName\", \"batiment\", \"site\", \"salle\", \"devEui\", \"deviceName\", \"host\"])\r\n  |> yield(name: \"sum\")\r\n",
+            "refId": "A"
+          }
+        ],
+        "title": "Number of opened doors and bikes stored this month",
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {},
+              "includeByName": {},
+              "indexByName": {},
+              "renameByName": {
+                "_value": "Number of open doors",
+                "nbBikes": "Number of stored bikes"
+              }
+            }
+          }
+        ],
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "cdqpojn08j6kgc"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "fillOpacity": 67,
+              "gradientMode": "opacity",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineWidth": 1,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "nbBikes"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "currency:Bikes: "
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "_time"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "time:MMM wo"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 11,
+          "w": 24,
+          "x": 0,
+          "y": 21
+        },
+        "id": 6,
+        "options": {
+          "barRadius": 0.05,
+          "barWidth": 0.97,
+          "fullHighlight": false,
+          "groupWidth": 0.7,
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "orientation": "auto",
+          "showValue": "auto",
+          "stacking": "none",
+          "tooltip": {
+            "maxHeight": 600,
+            "mode": "single",
+            "sort": "none"
+          },
+          "xTickLabelRotation": 0,
+          "xTickLabelSpacing": 0
+        },
+        "pluginVersion": "11.0.1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "cdqpojn08j6kgc"
+            },
+            "query": "import \"date\"\r\nimport \"experimental/date/boundaries\"\r\nimport \"math\"\r\n\r\nweekDays = [\"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\"]\r\nmonths = [\"January\", \"February\", \"March\", \"April\", \"May\", \"June\", \"July\", \"August\", \"September\", \"October\", \"November\", \"December\"]\r\n\r\nfrom(bucket: \"sacha\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"batiment\"] == \"garage-velo\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"DoorWindow_Event\")\r\n  |> filter(fn: (r) => r[\"_value\"] == \"Open\")\r\n  |> aggregateWindow(every: 1w, offset: -3d, timeSrc: \"_start\", fn: count, createEmpty: true)\r\n  |> map(fn: (r) => ({ r with nbBikes: math.floor(x:float(v: r._value + 1) * 0.5) }))\r\n  //|> map(fn: (r) => ({r with week: \"week \" + string(v: date.week(t: date.add(d: 3d, to: r._time)))}))\r\n  //|> map(fn: (r) => ({r with month:  months[date.month(t: r._time) - 1]}))\r\n  |> drop(columns: [\"_field\", \"_start\", \"_stop\", \"batiment\", \"applicationName\", \"devEui\", \"deviceName\", \"host\", \"name\", \"site\", \"_measurement\", \"_value\"])\r\n",
+            "refId": "A"
+          }
+        ],
+        "title": "Stored bikes",
+        "type": "barchart"
+      }
+    ],
+    "refresh": "5m",
+    "schemaVersion": 39,
+    "tags": [
+      "CROMA"
+    ],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "selected": true,
+            "text": "Today",
+            "value": "0d"
+          },
+          "hide": 0,
+          "includeAll": false,
+          "multi": false,
+          "name": "timeRange",
+          "options": [
+            {
+              "selected": true,
+              "text": "Today",
+              "value": "0d"
+            },
+            {
+              "selected": false,
+              "text": "Yesterday",
+              "value": "1d"
+            },
+            {
+              "selected": false,
+              "text": "The day before yesterday",
+              "value": "2d"
+            },
+            {
+              "selected": false,
+              "text": "3 days ago",
+              "value": "3d"
+            },
+            {
+              "selected": false,
+              "text": "4 days ago",
+              "value": "4d"
+            },
+            {
+              "selected": false,
+              "text": "5 days ago",
+              "value": "5d"
+            },
+            {
+              "selected": false,
+              "text": "6 days ago",
+              "value": "6d"
+            },
+            {
+              "selected": false,
+              "text": "A week ago",
+              "value": "7d"
+            }
+          ],
+          "query": "Today : 0d, Yesterday : 1d, The day before yesterday : 2d, 3 days ago : 3d, 4 days ago : 4d, 5 days ago : 5d, 6 days ago : 6d, A week ago : 7d",
+          "queryValue": "",
+          "skipUrlSync": false,
+          "type": "custom"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-90d",
+      "to": "now"
+    },
+    "timeRangeUpdatedDuringEditOrView": false,
+    "timepicker": {},
+    "timezone": "browser",
+    "title": "CROMA Bike Garage",
+    "uid": "eeeu481m30tfka",
+    "version": 27,
+    "weekStart": ""
+  }
