@@ -78,7 +78,7 @@ jb install github.com/grafana/grafonnet/gen/grafonnet-latest@main
 	locals {
 		...
 		dev = jsondecode(file("config_provider.json"))["dev"]
-		provider1 = jsondecode(file("config_provider.json"))["asder"]
+		provider1 = jsondecode(file("config_provider.json"))["provider1"]
 	}
 	```
 	Enfin, ajouter si besoin un nouveau provider
@@ -89,7 +89,7 @@ jb install github.com/grafana/grafonnet/gen/grafonnet-latest@main
 		auth = local.provider1.auth
 	}
 	```
-	Par défaut, il faut ajouter le fichier de configuration avec les provider `dev` et `asder`.
+	Par défaut, il faut ajouter le fichier de configuration avec les provider `dev` et `provider1`.
 * Configurer les fichiers de configuration `config_xxx.json`.
 
 Enfin :
@@ -212,6 +212,30 @@ L'utilisateur n'a que les fichiers de configuration à modifier dans lequel il d
 ## Ajouter un nouveau dashboard
 
 Voir https://docs.univ-lorawan.fr/fr/sylvain/grafana#ajouter-un-nouveau-dashboard-source
+
+## Retirer un provider
+
+Retirer les configurations d'un provider dans `main.tf` ne suffit pas à le retirer complètement. Il reste toutes les ressources associées à ce provider et dont terraform garde les configurations en mémoire. L'erreur produite après un `terraform plan` ou `terraform apply` ressemble à :
+
+``` bash
+│ Error: Provider configuration not present
+│
+To work with grafana_dashboard.temp_hum_provider1 (orphan) its original provider configuration at provider["registry.terraform.io/grafana/grafana"].provider1 is required, but it has been removed. This occurs when a provider configuration is removed while objects created by that provider still exist in the state. Re-add the provider configuration to destroy grafana_dashboard.temp_hum_provider1 (orphan), after which you can remove the provider configuration again.
+```
+
+Rafraichir ou supprimer le cache ne suffit pas. Il faut donc retirer les ressources manuellement.
+
+Lister l'état des ressources stockées par terraform
+``` bash
+terraform state list
+> grafana_dashboard.temp_hum_provider1
+> grafana_dashboard.temp_hum_dev
+```
+
+Supprimer la ou les ressources.
+``` bash
+terraform state rm grafana_dashboard.temp_hum_provider1
+```
 
 ## Sources du projet
 

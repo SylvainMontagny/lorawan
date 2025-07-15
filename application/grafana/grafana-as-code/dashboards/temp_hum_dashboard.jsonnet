@@ -3,7 +3,6 @@
 ##############################
 
 local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
-local g = grafana;
 # See documentation on how to use functions: https://github.com/grafana/grafonnet/tree/main/gen/grafonnet-v11.4.0#readme
 # And find the wanted package (e.g. panel/timeSeries)
 
