@@ -209,9 +209,102 @@ Toutes les informations utiles au dashboard sont dans le répertoire `dashboards
 
 L'utilisateur n'a que les fichiers de configuration à modifier dans lequel il décrit toutes les configurations souhaitées : `config_provider.json` et `config_xxx.json`.
 
-## Ajouter un nouveau dashboard
+## Ajouter un nouveau dashboard source
 
-Voir https://docs.univ-lorawan.fr/fr/sylvain/grafana#ajouter-un-nouveau-dashboard-source
+Toute la documentation pour le bloc data jsonnet_file est disponible ici : https://registry.terraform.io/providers/alxrem/jsonnet/latest/docs/data-sources/file#tla_code-1
+
+* Ajouter le dashboard template .jsonnet dans le dossier `dashboards` et eventuellement ses bibliothèques dans les dossiers `variables` et `panels`
+```
+myNewDashboard_dashboard.jsonnet
+```
+* Créer un fichier de configuration propre au dashboard à la source
+```
+config_myNewDashboard.json
+```
+Trié par provider
+``` json
+{
+  "provider1": {
+    "config1": "...",
+    "config2": "...",
+    ...
+  },
+  "provider2": {
+    "config1": "...",
+    "config2": "...",
+    ...
+  }
+}
+```
+* Dans le fichier `main.tf`, ajouter une variable de configuration dans le bloc *locals*
+``` hcl
+config_myNewDashboard = jsondecode(file("config_myNewDashboard.json"))
+```
+* Et ajouter un bloc data spécifique pour le provider
+``` hcl
+data "jsonnet_file" "myNewDashboard_dashboard_provider1" {
+    source = "${path.module}/dashboards/myNewDashboard_dashboard.jsonnet"
+    ext_code = {
+      myNewDashboard_dashboard_config = jsonencode(local.config_myNewDashboard.provider1)
+    }
+}
+```
+* Ajouter la configuration dans les fichiers sources
+```
+local config = std.extVar('air_quality_dashboard_config');
+```
+
+## Ajouter un nouveau provider et un dashboard
+
+Toute la documentation sur le bloc resource : https://developer.hashicorp.com/terraform/language/resources/syntax
+
+Toute la documentation sur le bloc resource grafana_dashboard : https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard
+
+Une fois un dashboard ajouté, il s'agit maintenant de le pousser au bon endroit, sur la bonne instance de Grafana (ou provider).
+
+* Pour des raisons de sécurité sur GitHub, il n'est pas possible de directement stocker des tokens. Dans le cas général, créer à la source du projet le fichier `config_provider.json` qui contient :
+``` json
+{
+  "dev": {
+    "url": "http://dev.univ-lorawan.fr:3000/",
+    "auth": "glsa_2d3..."
+  },
+  "provider1": {
+    "url":  "https://iot.provider1.fr",
+    "auth": "glsa_hQ2..."
+  }
+}
+```
+Dans le cas plus sauvage, passer directement aux derniers points.
+
+* Dans `main.tf`, ajouter les variables locales associées aux providers :
+``` hcl
+locals {
+	...
+	dev = jsondecode(file("config_provider.json"))["dev"]
+  provider1 = jsondecode(file("config_provider.json"))["provider1"]
+}
+```
+
+* Ajouter un nouveau provider
+``` hcl
+provider "grafana" {
+  alias = "provider1"
+  url = local.provider1.url
+  auth = local.provider1.auth
+}
+```
+
+Dans le cas plus sauvage, rentrer directement url et auth entre guillemets.
+* Ajouter le nouveau provider dans le fichier de configuration du dashboard
+* S'assurer d'avoir un bloc data en lien avec le provider (voir section ci dessus)
+* Ajouter un nouveau bloc resource. C'est un objet de l'infrastructure qui va permettre de créer le dashboard en format JSON et le pousser sur l'instance Grafana
+```
+resource "grafana_dashboard" "myNewDashboard_provider1" {
+  provider    = grafana.provider1
+  config_json = data.jsonnet_file.myNewDashboard_dashboard_provider1.rendered
+}
+```
 
 ## Retirer un provider
 
@@ -236,6 +329,31 @@ Supprimer la ou les ressources.
 ``` bash
 terraform state rm grafana_dashboard.temp_hum_provider1
 ```
+
+## Erreurs
+
+``` bash
+debian@user:IoT-main/dashboards$ jsonnet -J vendor bikeGarage.jsonnet
+RUNTIME ERROR: couldn't open import "github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet": no match locally or in the Jsonnet library paths
+        bikeGarage.jsonnet:1:19-92      thunk <grafonnet> from <$>
+        bikeGarage.jsonnet:3:1-10
+        During evaluation
+```
+
+Revenir dans le dossier du projet jsonnet qui contient le fichier `vendor` puis faire `jsonnet -J vendor dashboards/bikeGarage.jsonnet`.
+
+``` bash
+Error: Error in function call
+│
+│   on main.tf line 16, in locals:
+│   16:   config = jsondecode(file("config.json"))
+│     ├────────────────
+│     │ while calling jsondecode(str)
+│
+│ Call to function "jsondecode" failed: invalid character '}' looking for beginning of object key string.
+```
+
+Retirer la dernière virgule "," à la fin de l'objet du fichier json.
 
 ## Sources du projet
 
