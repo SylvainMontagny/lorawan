@@ -1,25 +1,41 @@
 # Grafana As Code
 
+## Sommaire
+
+1. [Objectif](#objectif)
+2. [Fonctionnement général](#fonctionnement-général)
+3. [Initialisation du projet](#initialisation-du-projet)
+4. [Déploiement](#déploiement)
+5. [Configuration les fichiers](#configurations)
+	1. [Edition des fichiers de configurations](#editer-les-fichiers-de-configurations)
+	2. [Token Grafana v9](#récupérer-un-token-grafana-pour-auth-dans-grafana-v9)
+	3. [Token Grafana v11](#récupérer-un-token-grafana-pour-auth-dans-grafana-v11)
+	4. [UID de datasource](#récupérer-luid-dune-datasource)
+6. [Configuration Terraform](#configurer-terraform)
+	1. [Nouveau Dashboard modèle](#ajouter-un-nouveau-dashboard-modèle)
+	2. [Nouveau provider et Dashboard](#ajouter-un-nouveau-provider-et-un-dashboard)
+	3. [Suppression provider](#retirer-un-provider)
+7. [Organisation des fichiers](#organisation-des-fichiers)
+8. [Débogage](#débogage)
+9. [Glossaire](#glossaire)
+10. [Sources](#sources-du-projet)
+
+
 ## Objectif
 
 Provisionner les mises à jours d'un tableau de bord modèle vers pusieurs serveurs.
 
-![schema_fonctionnement](images/SchemaAimGaC.png)
+![schema_objectif](images/SchemaAimGaC.png)
 
-## Glossaire
-[**Terraform**](https://fr.wikipedia.org/wiki/Terraform_(logiciel)) : environnement logiciel d'« infrastructure as code » publié par la société HashiCorp. Cet outil permet d'automatiser la construction des ressources d'une infrastructure de centre de données comme un réseau, des machines virtuelles, un groupe de sécurité ou une base de données.
+## Fonctionnement général
 
-**HCL** : Hashicorp Configuration Language, language utilisé par Terraform
+L'outil est composé de 2 parties distinctes :
 
-**provider** : objet de l'infrastructure Terraform qui représente une instance de destination (par exemple une instance de Grafana)
+* Développement manuel : étape de traduction manuelle du Dashboard JSON en Dashboard Jsonnet et ses bibliothèques libsonnet. Edition des fichiers de configuration ajout des variables dans le Dashboard,
 
-**data** : objet de l'infrastructure Terraform qui représente les données sources (par exemple un dashboard template stocké en tant que fichier jsonnet)
+* Déploiement automatique par Terraform : une fois configuré, Terraform génère chaque Dashboard en fonction des configurations choisies et les provisionne dans les différentes instances de Grafana.
 
-**resource** : objet de l'infrastructure Terraform qui va permettre de créer le dashboard en format JSON et le pousser sur un provider 
-
-**jsonnet** : langage de création de modèle de données permettant de générer des fichier JSON. C'est une extension du language JSON
-
-**grafonnet** : bibliothèque jsonnet dédiée à la génération de dashboard pour Grafana
+![schema_fonctionnement](images/schemaGaC_how_it_works.png)
 
 ## Initialisation du projet
 
@@ -106,7 +122,9 @@ Pour générer manuellement un dashboard au format JSON, aller dans les fichier 
 jsonnet -J ..\vendor\ .\temp_hum_dashboard.jsonnet -o .\rawDashboard\temp_hum_dashboard.json
 ```
 
-## Configuration
+## Configuration des fichier de configurations
+
+### Editer les fichiers de configurations
 
 Fichier de configuration `config_xxx.json` :
 ```json
@@ -179,37 +197,9 @@ Les datasources sont visibles ici :
 
 > Le token est déjà associé à une organisation, username et password. Attention à bien créer ce token depuis la bonne organisation.
 
-## Organisation des fichiers
+## Configuration de Terraform
 
-```
-.
-├── README.md
-├── main.tf
-├── config_air_quality.json
-├── config_temp_hum.json
-├── config_provider.json
-├── dashboards
-│   ├── air_quality_dashboard.jsonnet
-│   ├── temp_hum_dashboard.jsonnet
-│   ├── panels
-│   │   ├── panel_air_quality.libsonnet
-│   │   └── panel_temp_hum.libsonnet
-│   └── variables
-│       ├── variable_air_quality.libsonnet
-│       └── variable_temp_hum.libsonnet
-├── jsonnetfile.json
-├── jsonnetfile.lock.json
-├── terraform.tfstate
-├── terraform.tfstate.backup
-├── images ...
-└── vendor ...
-```
-
-Toutes les informations utiles au dashboard sont dans le répertoire `dashboards`. Les fichiers `xxx_dashboard.jsonnet` regroupent toutes les configurations relatives au dashboards générés. Les paneaux et les variables sont respectivement stockées dans les bibliothèques libsonnet de `panels` et `variables` : on peut retrouver tous les détails mais aussi les éléments de génération adaptés à la configuration choisie par l'utilisateur.
-
-L'utilisateur n'a que les fichiers de configuration à modifier dans lequel il décrit toutes les configurations souhaitées : `config_provider.json` et `config_xxx.json`.
-
-## Ajouter un nouveau dashboard source
+### Ajouter un nouveau dashboard modèle
 
 Toute la documentation pour le bloc data jsonnet_file est disponible ici : https://registry.terraform.io/providers/alxrem/jsonnet/latest/docs/data-sources/file#tla_code-1
 
@@ -254,7 +244,7 @@ data "jsonnet_file" "myNewDashboard_dashboard_provider1" {
 local config = std.extVar('air_quality_dashboard_config');
 ```
 
-## Ajouter un nouveau provider et un dashboard
+### Ajouter un nouveau provider et un dashboard
 
 Toute la documentation sur le bloc resource : https://developer.hashicorp.com/terraform/language/resources/syntax
 
@@ -306,7 +296,7 @@ resource "grafana_dashboard" "myNewDashboard_provider1" {
 }
 ```
 
-## Retirer un provider
+### Retirer un provider
 
 Retirer les configurations d'un provider dans `main.tf` ne suffit pas à le retirer complètement. Il reste toutes les ressources associées à ce provider et dont terraform garde les configurations en mémoire. L'erreur produite après un `terraform plan` ou `terraform apply` ressemble à :
 
@@ -330,7 +320,37 @@ Supprimer la ou les ressources.
 terraform state rm grafana_dashboard.temp_hum_provider1
 ```
 
-## Erreurs
+## Organisation des fichiers
+
+```
+.
+├── README.md
+├── main.tf
+├── config_air_quality.json
+├── config_temp_hum.json
+├── config_provider.json
+├── dashboards
+│   ├── air_quality_dashboard.jsonnet
+│   ├── temp_hum_dashboard.jsonnet
+│   ├── panels
+│   │   ├── panel_air_quality.libsonnet
+│   │   └── panel_temp_hum.libsonnet
+│   └── variables
+│       ├── variable_air_quality.libsonnet
+│       └── variable_temp_hum.libsonnet
+├── jsonnetfile.json
+├── jsonnetfile.lock.json
+├── terraform.tfstate
+├── terraform.tfstate.backup
+├── images ...
+└── vendor ...
+```
+
+Toutes les informations utiles au dashboard sont dans le répertoire `dashboards`. Les fichiers `xxx_dashboard.jsonnet` regroupent toutes les configurations relatives au dashboards générés. Les paneaux et les variables sont respectivement stockées dans les bibliothèques libsonnet de `panels` et `variables` : on peut retrouver tous les détails mais aussi les éléments de génération adaptés à la configuration choisie par l'utilisateur.
+
+L'utilisateur n'a que les fichiers de configuration à modifier dans lequel il décrit toutes les configurations souhaitées : `config_provider.json` et `config_xxx.json`.
+
+## Débogage
 
 ``` bash
 debian@user:IoT-main/dashboards$ jsonnet -J vendor bikeGarage.jsonnet
@@ -354,6 +374,21 @@ Error: Error in function call
 ```
 
 Retirer la dernière virgule "," à la fin de l'objet du fichier json.
+
+## Glossaire
+[**Terraform**](https://fr.wikipedia.org/wiki/Terraform_(logiciel)) : environnement logiciel d'« infrastructure as code » publié par la société HashiCorp. Cet outil permet d'automatiser la construction des ressources d'une infrastructure de centre de données comme un réseau, des machines virtuelles, un groupe de sécurité ou une base de données.
+
+**HCL** : Hashicorp Configuration Language, language utilisé par Terraform
+
+**provider** : objet de l'infrastructure Terraform qui représente une instance de destination (par exemple une instance de Grafana)
+
+**data** : objet de l'infrastructure Terraform qui représente les données sources (par exemple un dashboard template stocké en tant que fichier jsonnet)
+
+**resource** : objet de l'infrastructure Terraform qui va permettre de créer le dashboard en format JSON et le pousser sur un provider 
+
+**jsonnet** : langage de création de modèle de données permettant de générer des fichier JSON. C'est une extension du language JSON
+
+**grafonnet** : bibliothèque jsonnet dédiée à la génération de dashboard pour Grafana
 
 ## Sources du projet
 
