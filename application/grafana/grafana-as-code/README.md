@@ -23,7 +23,7 @@
 
 ## Objectif
 
-Provisionner les mises à jours d'un tableau de bord modèle vers pusieurs serveurs.
+Provisionner les mises à jour d'un tableau de bord modèle vers plusieurs serveurs.
 
 ![schema_objectif](images/SchemaAimGaC.png)
 
@@ -31,7 +31,7 @@ Provisionner les mises à jours d'un tableau de bord modèle vers pusieurs serve
 
 L'outil est composé de 2 parties distinctes :
 
-* Développement manuel : étape de traduction manuelle du Dashboard JSON en Dashboard Jsonnet et ses bibliothèques libsonnet. Edition des fichiers de configuration ajout des variables dans le Dashboard,
+* Développement manuel : étape de traduction manuelle du Dashboard JSON en Dashboard Jsonnet et ses bibliothèques libsonnet. Édition des fichiers de configuration ajout des variables dans le Dashboard,
 
 * Déploiement automatique par Terraform : une fois configuré, Terraform génère chaque Dashboard en fonction des configurations choisies et les provisionne dans les différentes instances de Grafana.
 
@@ -49,7 +49,7 @@ L'outil est composé de 2 parties distinctes :
 
 Ajouter `PATH=$PATH:~/go/bin:/usr/local/go/bin` au fichier `~/.profile` ou directement taper la commande `export PATH=$PATH:/usr/local/go/bin` dans un terminal. Si `go version` ne fonctionne pas, redémarrer la session.
 
-**Installer jsonnet et jsonnet-bundler :**
+**Installer Jsonnet et jsonnet-bundler :**
 
 ```bash
 go install github.com/google/go-jsonnet/cmd/jsonnet@latest
@@ -66,7 +66,7 @@ jb install github.com/grafana/grafonnet/gen/grafonnet-latest@main
 
 * Aller dans le répertoire `grafana-as-code`,
 * Ajouter un provider :
-	* Méthode simple (non recommendée, non compatible avec GitHub) : 
+	* Méthode simple (non recommandée, non-compatible avec GitHub) : 
 	dans main.tf, ajouter simplement les providers et leurs configurations
 	``` hcl
 	provider "grafana" {
@@ -75,7 +75,7 @@ jb install github.com/grafana/grafonnet/gen/grafonnet-latest@main
 		auth = "glsa_2d3..."
 	}
 	```
-	* Méthode propre (recommendée) :
+	* Méthode propre (recommandée) :
 	créer à la source du projet le fichier `config_provider.json` avec les données pour chaque provider :
 	``` json
 	{
@@ -112,17 +112,17 @@ Enfin :
 ```bash
 terraform init
 terraform plan
-terraform apply // ou terraform apply -target=grafana_dashboard.myNewDashboard_provider1 pour un dashboard spécifique
+terraform apply // ou terraform apply -target=grafana_dashboard.myNewDashboard_provider1 pour un Dashboard spécifique
 ```
 
-Terraform s'occupe de générer le dashboard à partir du fichier jsonnet et le pousse automatiquement sur Grafana.
+Terraform s'occupe de générer le Dashboard à partir du fichier Jsonnet et le pousse automatiquement sur Grafana.
 
-Pour générer manuellement un dashboard au format JSON, aller dans les fichier dashboard jsonnet et les bibliothèques variables et panels libsonnet pour décommenter les variables locales *fullConfig* et *config*, et commenter la variables locale *config* qui suit, puis aller dans le dossier `dashboards` et taper la commande suivante, à adapter avec le dashboard souhaité :
+Pour générer manuellement un Dashboard au format JSON, aller dans les fichier Dashboard Jsonnet et les bibliothèques variables et panels libsonnet pour décommenter les variables locales *fullConfig* et *config*, et commenter la variables locale *config* qui suit, puis aller dans le dossier `dashboards` et taper la commande suivante, à adapter avec le Dashboard souhaité :
 ``` bash
 jsonnet -J ..\vendor\ .\temp_hum_dashboard.jsonnet -o .\rawDashboard\temp_hum_dashboard.json
 ```
 
-## Configuration des fichier de configurations
+## Configuration des fichiers de configurations
 
 ### Editer les fichiers de configurations
 
@@ -183,7 +183,7 @@ A associer avec la clé `datasource` :
 curl -u username:password http://url/to/grafana/api/datasources
 ```
 
-Ou aller dans un dashboard qui utilise déjà la bonne datasource, puis `Share > Export > View JSON` puis chercher l'objet suivant afin de récupérer le bon **uid** :
+Ou aller dans un Dashboard qui utilise déjà la bonne datasource, puis `Share > Export > View JSON` puis chercher l'objet suivant afin de récupérer le bon **uid** :
 ``` json
 "datasource": {
 	"type": "influxdb",
@@ -199,15 +199,15 @@ Les datasources sont visibles ici :
 
 ## Configuration de Terraform
 
-### Ajouter un nouveau dashboard modèle
+### Ajouter un nouveau Dashboard modèle
 
 Toute la documentation pour le bloc data jsonnet_file est disponible ici : https://registry.terraform.io/providers/alxrem/jsonnet/latest/docs/data-sources/file#tla_code-1
 
-* Ajouter le dashboard template .jsonnet dans le dossier `dashboards` et eventuellement ses bibliothèques dans les dossiers `variables` et `panels`
+* Ajouter le Dashboard template .jsonnet dans le dossier `dashboards` et eventuellement ses bibliothèques dans les dossiers `variables` et `panels`
 ```
 myNewDashboard_dashboard.jsonnet
 ```
-* Créer un fichier de configuration propre au dashboard à la source
+* Créer un fichier de configuration propre au Dashboard à la source
 ```
 config_myNewDashboard.json
 ```
@@ -244,13 +244,13 @@ data "jsonnet_file" "myNewDashboard_dashboard_provider1" {
 local config = std.extVar('air_quality_dashboard_config');
 ```
 
-### Ajouter un nouveau provider et un dashboard
+### Ajouter un nouveau provider et un Dashboard
 
 Toute la documentation sur le bloc resource : https://developer.hashicorp.com/terraform/language/resources/syntax
 
 Toute la documentation sur le bloc resource grafana_dashboard : https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard
 
-Une fois un dashboard modèle ajouté, il s'agit maintenant de le pousser au bon endroit, sur la bonne instance de Grafana (ou provider).
+Une fois un Dashboard modèle ajouté, il s'agit maintenant de le pousser au bon endroit, sur la bonne instance de Grafana (ou provider).
 
 * Pour des raisons de sécurité sur GitHub, il n'est pas possible de directement stocker des tokens. Dans le cas général, créer à la source du projet le fichier `config_provider.json` qui contient :
 ``` json
@@ -286,11 +286,11 @@ provider "grafana" {
 ```
 
 Dans le cas plus simple, rentrer directement url et auth entre guillemets.
-	* Ajouter le nouveau provider dans le fichier de configuration du dashboard
+	* Ajouter le nouveau provider dans le fichier de configuration du Dashboard
 
 	* S'assurer d'avoir un bloc data en lien avec le provider (voir section ci dessus)
 
-* Ajouter un nouveau bloc ressource. C'est un objet de l'infrastructure qui va permettre de créer le dashboard en format JSON et le pousser sur l'instance Grafana
+* Ajouter un nouveau bloc ressource. C'est un objet de l'infrastructure qui va permettre de créer le Dashboard en format JSON et le pousser sur l'instance Grafana
 ```
 resource "grafana_dashboard" "myNewDashboard_provider1" {
   provider    = grafana.provider1
@@ -349,7 +349,7 @@ Une méthode alternative est de supprimer le fichier `terraform.tfstate`.
 └── vendor ...
 ```
 
-Toutes les informations utiles au dashboard sont dans le répertoire `dashboards`. Les fichiers `xxx_dashboard.jsonnet` regroupent toutes les configurations relatives au dashboards générés. Les paneaux et les variables sont respectivement stockées dans les bibliothèques libsonnet de `panels` et `variables` : on peut retrouver tous les détails mais aussi les éléments de génération adaptés à la configuration choisie par l'utilisateur.
+Toutes les informations utiles au Dashboard sont dans le répertoire `dashboards`. Les fichiers `xxx_dashboard.jsonnet` regroupent toutes les configurations relatives au Dashboards générés. Les paneaux et les variables sont respectivement stockées dans les bibliothèques libsonnet de `panels` et `variables` : on peut retrouver tous les détails mais aussi les éléments de génération adaptés à la configuration choisie par l'utilisateur.
 
 L'utilisateur n'a que les fichiers de configuration à modifier dans lequel il décrit toutes les configurations souhaitées : `config_provider.json` et `config_xxx.json`.
 
@@ -363,7 +363,7 @@ RUNTIME ERROR: couldn't open import "github.com/grafana/grafonnet/gen/grafonnet-
         During evaluation
 ```
 
-Revenir dans le dossier du projet jsonnet qui contient le fichier `vendor` puis faire `jsonnet -J vendor dashboards/bikeGarage.jsonnet`.
+Revenir dans le dossier du projet Jsonnet qui contient le fichier `vendor` puis faire `jsonnet -J vendor dashboards/bikeGarage.jsonnet`.
 
 ``` bash
 Error: Error in function call
@@ -385,13 +385,13 @@ Retirer la dernière virgule "," à la fin de l'objet du fichier json.
 
 **provider** : objet de l'infrastructure Terraform qui représente une instance de destination (par exemple une instance de Grafana)
 
-**data** : objet de l'infrastructure Terraform qui représente les données sources (par exemple un dashboard template stocké en tant que fichier jsonnet)
+**data** : objet de l'infrastructure Terraform qui représente les données sources (par exemple un Dashboard template stocké en tant que fichier Jsonnet)
 
-**resource** : objet de l'infrastructure Terraform qui va permettre de créer le dashboard en format JSON et le pousser sur un provider 
+**resource** : objet de l'infrastructure Terraform qui va permettre de créer le Dashboard en format JSON et le pousser sur un provider 
 
-**jsonnet** : langage de création de modèle de données permettant de générer des fichier JSON. C'est une extension du language JSON
+**Jsonnet** : langage de création de modèle de données permettant de générer des fichier JSON. C'est une extension du language JSON
 
-**grafonnet** : bibliothèque jsonnet dédiée à la génération de dashboard pour Grafana
+**grafonnet** : bibliothèque Jsonnet dédiée à la génération de Dashboard pour Grafana
 
 ## Sources du projet
 
@@ -405,8 +405,8 @@ Retirer la dernière virgule "," à la fin de l'objet du fichier json.
 
 **Provider grafana** https://developer.hashicorp.com/terraform/language
 
-**Data jsonnet** https://registry.terraform.io/providers/alxrem/jsonnet/latest/docs/data-sources/file#tla_code-1
+**Data Jsonnet** https://registry.terraform.io/providers/alxrem/jsonnet/latest/docs/data-sources/file#tla_code-1
 
-**Synthaxe jsonnet** https://jsonnet.org/learning/tutorial.html
+**Synthaxe Jsonnet** https://jsonnet.org/learning/tutorial.html
 
 **Packages grafonnet** https://github.com/grafana/grafonnet/tree/d20e609202733790caf5b554c9945d049f243ae3/gen/grafonnet-v11.4.0
