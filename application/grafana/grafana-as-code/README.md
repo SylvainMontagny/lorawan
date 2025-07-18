@@ -71,7 +71,7 @@ jb install github.com/grafana/grafonnet/gen/grafonnet-latest@main
 	``` hcl
 	provider "grafana" {
 		alias = "provider1"
-		url = "http://dev.univ-lorawan.fr:3000/"
+		url = "http://provider1.univ-lorawan.fr:3000/"
 		auth = "glsa_2d3..."
 	}
 	```
@@ -79,12 +79,12 @@ jb install github.com/grafana/grafonnet/gen/grafonnet-latest@main
 	créer à la source du projet le fichier `config_provider.json` avec les données pour chaque provider :
 	``` json
 	{
-		"dev": {
-			"url": "http://dev.univ-lorawan.fr:3000/",
+		"config_provider1": {
+			"url": "http://provider1.univ-lorawan.fr:3000/",
 			"auth": "glsa_2d3..."
 		},
-		"provider1": {
-			"url":  "https://iot.provider1.fr",
+		"config_provider2": {
+			"url":  "https://iot.provider2.fr",
 			"auth": "glsa_hQ2..."
 		}
 	}
@@ -93,19 +93,19 @@ jb install github.com/grafana/grafonnet/gen/grafonnet-latest@main
 	``` hcl
 	locals {
 		...
-		dev = jsondecode(file("config_provider.json"))["dev"]
-		provider1 = jsondecode(file("config_provider.json"))["provider1"]
+		config_provider1 = jsondecode(file("config_provider.json"))["config_provider1"]
+		config_provider2 = jsondecode(file("config_provider.json"))["config_provider2"]
 	}
 	```
 	Enfin, ajouter si besoin un nouveau provider
 	``` hcl
 	provider "grafana" {
 		alias = "provider1"
-		url = local.provider1.url
-		auth = local.provider1.auth
+		url = local.config_provider1.url
+		auth = local.config_provider1.auth
 	}
 	```
-	Par défaut, il faut ajouter le fichier de configuration avec les provider `dev` et `provider1`.
+	Par défaut, il faut ajouter le fichier de configuration `config_provider.json` avec les providers `config_provider1` et `config_provider2` et donc utiliser la méthode "propre".
 * Configurer les fichiers de configuration `config_xxx.json`.
 
 Enfin :
@@ -140,7 +140,7 @@ Fichier de configuration `config_xxx.json` :
 		"variable1Name": "CAMPUS",
 		"variable2Name": "Batiment",
 		"variable3Name": "ROOM",
-		"datasource": "deivf3q0qa1hca"
+		"datasource": "deivf3...TO_BE_MODIFIED"
 	},
 	"provider2" : {
 		...
@@ -151,11 +151,11 @@ Fichier de configuration `config_xxx.json` :
 Fichier de configuration `config_provider.json`
 ``` json
 {
-  "povider1": {
+  "config_provider1": {
     "url": "http://provider1.univ-lorawan.fr:3000/",
     "auth": "glsa_2d3..."
   },
-  "provider2": {
+  "config_provider2": {
     "url":  "https://iot.provider2.fr",
     "auth": "glsa_hQ2..."
   }
@@ -250,45 +250,47 @@ Toute la documentation sur le bloc resource : https://developer.hashicorp.com/te
 
 Toute la documentation sur le bloc resource grafana_dashboard : https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard
 
-Une fois un dashboard ajouté, il s'agit maintenant de le pousser au bon endroit, sur la bonne instance de Grafana (ou provider).
+Une fois un dashboard modèle ajouté, il s'agit maintenant de le pousser au bon endroit, sur la bonne instance de Grafana (ou provider).
 
 * Pour des raisons de sécurité sur GitHub, il n'est pas possible de directement stocker des tokens. Dans le cas général, créer à la source du projet le fichier `config_provider.json` qui contient :
 ``` json
 {
-  "dev": {
-    "url": "http://dev.univ-lorawan.fr:3000/",
+  "config_provider1": {
+    "url": "http://provider1.univ-lorawan.fr:3000/",
     "auth": "glsa_2d3..."
   },
-  "provider1": {
-    "url":  "https://iot.provider1.fr",
+  "config_provider2": {
+    "url":  "https://iot.provider2.fr",
     "auth": "glsa_hQ2..."
   }
 }
 ```
-Dans le cas plus sauvage, passer directement aux derniers points.
+Pour une méthode plus simple et directe (non recommendée), passer directement aux derniers points.
 
-* Dans `main.tf`, ajouter les variables locales associées aux providers :
+	* Dans `main.tf`, ajouter les variables locales associées aux providers :
 ``` hcl
 locals {
 	...
-	dev = jsondecode(file("config_provider.json"))["dev"]
-  provider1 = jsondecode(file("config_provider.json"))["provider1"]
+	config_provider1 = jsondecode(file("config_provider.json"))["config_provider1"]
+  config_provider2 = jsondecode(file("config_provider.json"))["config_provider2"]
 }
 ```
 
-* Ajouter un nouveau provider
+	* Ajouter un nouveau provider
 ``` hcl
 provider "grafana" {
   alias = "provider1"
-  url = local.provider1.url
-  auth = local.provider1.auth
+  url = local.config_provider1.url
+  auth = local.config_provider1.auth
 }
 ```
 
-Dans le cas plus sauvage, rentrer directement url et auth entre guillemets.
-* Ajouter le nouveau provider dans le fichier de configuration du dashboard
-* S'assurer d'avoir un bloc data en lien avec le provider (voir section ci dessus)
-* Ajouter un nouveau bloc resource. C'est un objet de l'infrastructure qui va permettre de créer le dashboard en format JSON et le pousser sur l'instance Grafana
+Dans le cas plus simple, rentrer directement url et auth entre guillemets.
+	* Ajouter le nouveau provider dans le fichier de configuration du dashboard
+
+	* S'assurer d'avoir un bloc data en lien avec le provider (voir section ci dessus)
+
+* Ajouter un nouveau bloc ressource. C'est un objet de l'infrastructure qui va permettre de créer le dashboard en format JSON et le pousser sur l'instance Grafana
 ```
 resource "grafana_dashboard" "myNewDashboard_provider1" {
   provider    = grafana.provider1
@@ -320,6 +322,8 @@ Supprimer la ou les ressources.
 terraform state rm grafana_dashboard.temp_hum_provider1
 ```
 
+Une méthode alternative est de supprimer le fichier `terraform.tfstate`.
+
 ## Organisation des fichiers
 
 ```
@@ -341,7 +345,6 @@ terraform state rm grafana_dashboard.temp_hum_provider1
 ├── jsonnetfile.json
 ├── jsonnetfile.lock.json
 ├── terraform.tfstate
-├── terraform.tfstate.backup
 ├── images ...
 └── vendor ...
 ```
