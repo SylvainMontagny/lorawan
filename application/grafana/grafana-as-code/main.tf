@@ -1,26 +1,15 @@
-terraform {
-  required_providers {
-    grafana = {
-      source  = "grafana/grafana"
-      version = "~> 2.0"
-    }
-
-    jsonnet = {
-      source = "alxrem/jsonnet"
-    }
-  }
-}
-
 # Variables
 locals {
   config_temp_hum = jsondecode(file("config_temp_hum.json"))
   config_air_quality = jsondecode(file("config_air_quality.json"))
   # Add more configurations as needed for other dashboards
 
-  dev = jsondecode(file("config_provider.json"))["dev"]
+  config_provider1 = jsondecode(file("config_provider.json"))["config_provider1"]
+  # config_provider2 = jsondecode(file("config_provider.json"))["config_provider2"]
   # Add more provider configurations as needed
 }
 
+# Paths
 provider "jsonnet" {
   jsonnet_path = join(":", ["${path.module}/jsonnet", "${path.module}/jsonnet/grafonnet-lib", "${path.module}/vendor"])
 }
@@ -30,10 +19,16 @@ provider "jsonnet" {
 ###########################
 
 provider "grafana" {
-  alias = "dev"
-  url = local.dev.url
-  auth = local.dev.auth
+  alias = "provider1"
+  url = local.config_provider1.url
+  auth = local.config_provider1.auth
 }
+
+# provider "grafana" {
+#   alias = "provider2"
+#   url = local.config_provider2.url
+#   auth = local.config_provider2.auth
+# }
 
 # Describe here the new provider for grafonnet
 
@@ -41,34 +36,46 @@ provider "grafana" {
 # Dashboard for Temperature and Humidity #
 ##########################################
 
-## For development purpuses
-data "jsonnet_file" "temp_hum_dashboard_dev" {
+## For provider1, link Jsonnet dashboard with provider1's configuration
+data "jsonnet_file" "temp_hum_dashboard_provider1" {
     source = "${path.module}/dashboards/temp_hum_dashboard.jsonnet"
     ext_code = {
-      temp_hum_dashboard_config = jsonencode(local.config_temp_hum.dev)
+      temp_hum_dashboard_config = jsonencode(local.config_temp_hum.provider1)
     }
 }
-resource "grafana_dashboard" "temp_hum_dev" {
-  provider    = grafana.dev
-  config_json = data.jsonnet_file.temp_hum_dashboard_dev.rendered
+## Provides rendered dashboard to Grafana
+resource "grafana_dashboard" "temp_hum_provider1" {
+  provider    = grafana.provider1
+  config_json = data.jsonnet_file.temp_hum_dashboard_provider1.rendered
 }
 
-# Add here more dashboards + provider as needed, following the same pattern
+# Add here more dashboards as needed, following the same pattern
+
+# data "jsonnet_file" "temp_hum_dashboard_provider2" {
+#     source = "${path.module}/dashboards/temp_hum_dashboard.jsonnet"
+#     ext_code = {
+#       temp_hum_dashboard_config = jsonencode(local.config_temp_hum.client2)
+#     }
+# }
+# resource "grafana_dashboard" "temp_hum_provider2" {
+#   provider    = grafana.provider2
+#   config_json = data.jsonnet_file.temp_hum_dashboard_provider2.rendered
+# }
 
 #############################
 # Dashboard for Air Quality #
 #############################
 
-## For dev
-data "jsonnet_file" "air_quality_dashboard_dev" {
+## For provider1
+data "jsonnet_file" "air_quality_dashboard_provider1" {
   source = "${path.module}/dashboards/air_quality_dashboard.jsonnet"
   ext_code = {
-    air_quality_dashboard_config = jsonencode(local.config_air_quality.dev)
+    air_quality_dashboard_config = jsonencode(local.config_air_quality.provider1)
   }
 }
-resource "grafana_dashboard" "air_quality_dev" {
-  provider    = grafana.dev
-  config_json = data.jsonnet_file.air_quality_dashboard_dev.rendered
+resource "grafana_dashboard" "air_quality_provider1" {
+  provider    = grafana.provider1
+  config_json = data.jsonnet_file.air_quality_dashboard_provider1.rendered
 }
 
-# Add here more dashboards + provider as needed, following the same pattern
+# Add here more dashboards as needed, following the same pattern
