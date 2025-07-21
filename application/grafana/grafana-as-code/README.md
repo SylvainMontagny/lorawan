@@ -112,7 +112,7 @@ Enfin :
 ```bash
 terraform init
 terraform plan
-terraform apply // ou terraform apply -target=grafana_dashboard.myNewDashboard_provider1 pour un Dashboard spécifique
+terraform apply // ou terraform apply -target="grafana_dashboard.myNewDashboard_provider1" pour un Dashboard spécifique
 ```
 
 Terraform s'occupe de générer le Dashboard à partir du fichier Jsonnet et le pousse automatiquement sur Grafana.

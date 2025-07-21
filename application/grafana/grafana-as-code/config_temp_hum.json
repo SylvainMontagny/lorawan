@@ -5,8 +5,7 @@
 		"bucket": "iot-platform",
 		"measurements": [
 			{ "key": "Temperature", "value": "TempC_SHT", "unit": "celsius" },
-			{ "key": "Humidity", "value": "Hum_SHT", "unit": "percent" },
-			{ "key": "Air Quality", "value": "Co2_SHT", "unit": "ppm" }
+			{ "key": "Humidity", "value": "Hum_SHT", "unit": "percent" }
 		],
 		"variable1Name": "CAMPUS",
 		"variable2Name": "BATIMENT",
@@ -22,8 +21,7 @@
 		"bucket": "BUCKET_NAME",
 		"measurements": [
 			{ "key": "Temperature", "value": "TempC_SHT", "unit": "celsius" },
-			{ "key": "Humidity", "value": "Hum_SHT", "unit": "percent" },
-			{ "key": "Air Quality", "value": "Co2_SHT", "unit": "ppm" }
+			{ "key": "Humidity", "value": "Hum_SHT", "unit": "percent" }
 		],
 		"variable1Name": "CAMPUS",
 		"variable2Name": "BUILDING",

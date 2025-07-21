@@ -1,5 +1,6 @@
 # Variables
 locals {
+  myConfig = jsondecode(file("config.json"))
   config_temp_hum = jsondecode(file("config_temp_hum.json"))
   config_air_quality = jsondecode(file("config_air_quality.json"))
   # Add more configurations as needed for other dashboards
@@ -31,6 +32,22 @@ provider "grafana" {
 # }
 
 # Describe here the new provider for grafonnet
+
+###################
+# Basic Dashboard #
+###################
+
+data "jsonnet_file" "myDashboardProvider1" {
+  source = "${path.module}/dashboards/myConfigDashboard.jsonnet"
+  ext_code = {
+    myConfig = jsonencode(local.myConfig.config_provider1)
+  }
+}
+
+resource "grafana_dashboard" "myGrafanaDashboardProvider1" {
+  provider    = grafana.provider1
+  config_json = data.jsonnet_file.myDashboardProvider1.rendered
+}
 
 ##########################################
 # Dashboard for Temperature and Humidity #
