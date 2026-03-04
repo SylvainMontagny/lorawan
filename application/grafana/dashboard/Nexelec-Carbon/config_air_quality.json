@@ -1,0 +1,34 @@
+{
+	"dev":
+	{
+		"dashboardName": "Air Quality DEV",
+		"bucket": "iot-platform",
+		"measurements": [
+            { "key": "CO2", "value": "co2_value", "unit": "ppm" },
+			{ "key": "Temperature", "value": "temperature_value", "unit": "celsius" },
+			{ "key": "Humidity", "value": "relativeHumidity_value", "unit": "percent" }
+		],
+		"variable1Name": "CAMPUS",
+		"variable2Name": "BATIMENT",
+		"variable3Name": "SALLE",
+		"datasource": "deivf3q0qa1hca",
+		"tags": ["CO2", "Generated"],
+
+		"dashboardDescription": "# Air Quality in developpment\nAir quality data caught by Carbon Nexelec sensors at Technolac Campus.\n\nThis is an automatically generated dashboard."
+	},
+	"asder":
+	{
+		"dashboardName": "Qualité d'air ASDER",
+		"bucket": "Temperature et qualité d'air",
+		"measurements": [
+			{ "key": "CO2", "value": "co2_value", "unit": "ppm" }
+		],
+		"variable1Name": "SITE",
+		"variable2Name": "BATIMENT",
+		"variable3Name": "ROOM",
+		"datasource": "deivf3q0qa1hca",
+		"tags": ["CO2"],
+
+		"dashboardDescription": "# Qualité d'air\nQualité d'air de différentes salles, captée par les capteurs Carbon Nexelec."
+	}
+}

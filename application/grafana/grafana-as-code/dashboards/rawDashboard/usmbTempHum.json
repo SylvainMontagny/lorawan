@@ -1,0 +1,866 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "The temperatures and humidity of all technolac campus' rooms, caught by a LHT65 sensor.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 25,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "InfluxDB",
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 59,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# Temperature and Humidity at Technolac\r\nThe temperatures and humidity of all Technolac campus' rooms, caught by a LHT65 sensor.\r\n",
+        "mode": "markdown"
+      },
+      "pluginVersion": "11.0.1",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "cdqpojn08j6kgc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 3600000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 30
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "celsius"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 18,
+        "w": 24,
+        "x": 0,
+        "y": 3
+      },
+      "id": 20,
+      "maxPerRow": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "timezone": [
+          "browser"
+        ],
+        "tooltip": {
+          "maxHeight": 600,
+          "mode": "single",
+          "sort": "asc"
+        }
+      },
+      "repeat": "MEASUREMENT",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "cdqpojn08j6kgc"
+          },
+          "query": "import \"strings\"\r\n\r\nfrom(bucket: \"Temperature room USMB\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"value\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"${MEASUREMENT}\" and \"${MEASUREMENT}\" == \"TempC_SHT\")\r\n  |> filter(fn: (r) => exists r[\"site\"] and contains(set: ${SITE:json}, value: strings.toLower(v: r[\"site\"])))\r\n  |> filter(fn: (r) => (exists r[\"batiment\"] and contains(set: ${BUILDING:json}, value: strings.toLower(v: r[\"batiment\"]))) or\r\n    (exists r[\"building\"] and contains(set: ${BUILDING:json}, value: strings.toLower(v: r[\"building\"]))))\r\n  |> filter(fn: (r) => (exists r[\"salle\"] and contains(set: ${ROOM:json}, value: strings.toLower(v: r[\"salle\"]))) or\r\n    (exists r[\"room\"] and contains(set: ${ROOM:json}, value: strings.toLower(v: r[\"room\"]))))\r\n  |> drop(columns: [\"host\", \"applicationName\", \"devEui\", \"deviceName\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> group(columns: []) // Or union\r\n  |> sort(columns: [\"salle\"], desc: false)\r\n  |> group(columns: [\"salle\", \"batiment\", \"site\"])\r\n",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "cdqpojn08j6kgc"
+          },
+          "hide": false,
+          "query": "import \"strings\"\r\n\r\nfrom(bucket: \"Temperature room USMB\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"value\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"${MEASUREMENT}\" and \"${MEASUREMENT}\" == \"Hum_SHT\")\r\n  |> filter(fn: (r) => exists r[\"site\"] and contains(set: ${SITE:json}, value: strings.toLower(v: r[\"site\"])))\r\n  |> filter(fn: (r) => (exists r[\"batiment\"] and contains(set: ${BUILDING:json}, value: strings.toLower(v: r[\"batiment\"]))) or\r\n    (exists r[\"building\"] and contains(set: ${BUILDING:json}, value: strings.toLower(v: r[\"building\"]))))\r\n  |> filter(fn: (r) => (exists r[\"salle\"] and contains(set: ${ROOM:json}, value: strings.toLower(v: r[\"salle\"]))) or\r\n    (exists r[\"room\"] and contains(set: ${ROOM:json}, value: strings.toLower(v: r[\"room\"]))))\r\n  |> drop(columns: [\"host\", \"applicationName\", \"devEui\", \"deviceName\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> group(columns: []) // Or union\r\n  |> sort(columns: [\"salle\"], desc: false)\r\n  |> group(columns: [\"salle\", \"batiment\", \"site\"])\r\n",
+          "refId": "B"
+        }
+      ],
+      "title": "${MEASUREMENT} of ${ROOM}",
+      "transformations": [
+        {
+          "disabled": true,
+          "id": "renameByRegex",
+          "options": {
+            "regex": ".*batiment=\"([^\"]*)\".*salle=\"([^\"]*)\".*site=\"([^\"]*)\"",
+            "renamePattern": "$1 - $2 - $3"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": ".*batiment=\"(.*?)\".*salle=\"(.*?)\".*site=\"(.*?)\".*",
+            "renamePattern": "$2"
+          }
+        },
+        {
+          "disabled": true,
+          "id": "labelsToFields",
+          "options": {
+            "keepLabels": [
+              "salle"
+            ],
+            "mode": "columns",
+            "valueLabel": "salle"
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "id": 22,
+      "panels": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "cdqpojn08j6kgc"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": 3600000,
+                "lineInterpolation": "linear",
+                "lineStyle": {
+                  "fill": "solid"
+                },
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 30
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "A"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "celsius"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "B"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "percent"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 24,
+            "x": 0,
+            "y": 22
+          },
+          "id": 21,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "maxHeight": 600,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "repeat": "ROOM",
+          "repeatDirection": "v",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "cdqpojn08j6kgc"
+              },
+              "query": "import \"strings\"\r\n\r\nmeasurement = strings.split(v: \"${MEASUREMENT}\", t: \" \")[0]\r\n\r\nfrom(bucket: \"Temperature room USMB\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"value\")\r\n  |> filter(fn: (r) => r[\"_field\"] == measurement and measurement == \"TempC_SHT\")\r\n  |> filter(fn: (r) => exists r[\"salle\"] and (strings.toLower(v: r.salle) == \"${ROOM}\"))\r\n  |> drop(columns: [\"host\", \"applicationName\", \"devEui\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> yield(name: \"${MEASUREMENT}\")\r\n",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "cdqpojn08j6kgc"
+              },
+              "hide": false,
+              "query": "import \"strings\"\r\n\r\nmeasurement = strings.split(v: \"${MEASUREMENT}\", t: \" \")[0]\r\n\r\nfrom(bucket: \"Temperature room USMB\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"value\")\r\n  |> filter(fn: (r) => r[\"_field\"] == measurement and measurement == \"Hum_SHT\")\r\n  |> filter(fn: (r) => exists r[\"salle\"] and (strings.toLower(v: r.salle) == \"${ROOM}\"))\r\n  |> drop(columns: [\"host\", \"applicationName\", \"devEui\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> yield(name: \"${MEASUREMENT}\")\r\n",
+              "refId": "B"
+            }
+          ],
+          "title": "${MEASUREMENT} of ${ROOM}",
+          "transformations": [
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": ".*batiment=\"(.*?)\".*salle=\"(.*?)\".*site=\"(.*?)\".*",
+                "renamePattern": "$2 - $1 - $3"
+              }
+            },
+            {
+              "disabled": true,
+              "id": "renameByRegex",
+              "options": {
+                "regex": ".*deviceName=\"(.*)\"}",
+                "renamePattern": "$1"
+              }
+            }
+          ],
+          "transparent": true,
+          "type": "timeseries"
+        }
+      ],
+      "title": "Single-View",
+      "type": "row"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 97,
+      "panels": [],
+      "title": "Advanced visualisation",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "cdqpojn08j6kgc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 3600000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "linearThreshold": 0,
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "rssi"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dBm"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 18,
+        "w": 24,
+        "x": 0,
+        "y": 23
+      },
+      "id": 95,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "mean",
+            "variance"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "maxHeight": 600,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "cdqpojn08j6kgc"
+          },
+          "query": "import \"strings\"\r\n\r\nfrom(bucket: \"Temperature room USMB\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"value\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"rssi\")\r\n  |> filter(fn: (r) => exists r[\"site\"] and contains(set: ${SITE:json}, value: strings.toLower(v: r[\"site\"])))\r\n  |> filter(fn: (r) => (exists r[\"batiment\"] and contains(set: ${BUILDING:json}, value: strings.toLower(v: r[\"batiment\"]))) or\r\n    (exists r[\"building\"] and contains(set: ${BUILDING:json}, value: strings.toLower(v: r[\"building\"]))))\r\n  |> filter(fn: (r) => (exists r[\"salle\"] and contains(set: ${ROOM:json}, value: strings.toLower(v: r[\"salle\"]))) or\r\n    (exists r[\"room\"] and contains(set: ${ROOM:json}, value: strings.toLower(v: r[\"room\"]))))\r\n\r\n  |> drop(columns: [\"host\", \"gatewayId\", \"applicationName\", \"devEui\", \"deviceName\"])\r\n  |> map(fn: (r) => ({ r with type: \"RSSI\" }))\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "RSSI",
+      "transformations": [
+        {
+          "disabled": true,
+          "id": "renameByRegex",
+          "options": {
+            "regex": "(.*)",
+            "renamePattern": "$1"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": ".*batiment=\"(.*?)\".*salle=\"(.*?)\".*site=\"(.*?)\".*",
+            "renamePattern": "$2 - $1 - $3"
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "cdqpojn08j6kgc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 3600000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byType",
+              "options": "number"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dB"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 41
+      },
+      "id": 133,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean",
+            "variance"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "maxHeight": 600,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "cdqpojn08j6kgc"
+          },
+          "query": "import \"strings\"\r\n\r\nfrom(bucket: \"Temperature room USMB\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"value\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"snr\")\r\n  |> filter(fn: (r) => exists r[\"site\"] and contains(set: ${SITE:json}, value: strings.toLower(v: r[\"site\"])))\r\n  |> filter(fn: (r) => (exists r[\"batiment\"] and contains(set: ${BUILDING:json}, value: strings.toLower(v: r[\"batiment\"]))) or\r\n    (exists r[\"building\"] and contains(set: ${BUILDING:json}, value: strings.toLower(v: r[\"building\"]))))\r\n  |> filter(fn: (r) => (exists r[\"salle\"] and contains(set: ${ROOM:json}, value: strings.toLower(v: r[\"salle\"]))) or\r\n    (exists r[\"room\"] and contains(set: ${ROOM:json}, value: strings.toLower(v: r[\"room\"]))))\r\n\r\n  |> drop(columns: [\"host\", \"gatewayId\", \"applicationName\", \"devEui\", \"deviceName\"])\r\n  |> map(fn: (r) => ({ r with type: \"RSSI\" }))\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "SNR",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": ".*batiment=\"(.*?)\".*salle=\"(.*?)\".*site=\"(.*?)\".*",
+            "renamePattern": "$2 - $1 - $3"
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "cdqpojn08j6kgc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 12,
+            "axisSoftMin": 7,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 56
+      },
+      "id": 134,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "mean",
+            "variance"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "maxHeight": 600,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "cdqpojn08j6kgc"
+          },
+          "query": "import \"strings\"\r\n\r\nfrom(bucket: \"Temperature room USMB\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"value\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"modulation_lora_spreadingFactor\")\r\n  |> filter(fn: (r) => exists r[\"site\"] and contains(set: ${SITE:json}, value: strings.toLower(v: r[\"site\"])))\r\n  |> filter(fn: (r) => (exists r[\"batiment\"] and contains(set: ${BUILDING:json}, value: strings.toLower(v: r[\"batiment\"]))) or\r\n    (exists r[\"building\"] and contains(set: ${BUILDING:json}, value: strings.toLower(v: r[\"building\"]))))\r\n  |> filter(fn: (r) => (exists r[\"salle\"] and contains(set: ${ROOM:json}, value: strings.toLower(v: r[\"salle\"]))) or\r\n    (exists r[\"room\"] and contains(set: ${ROOM:json}, value: strings.toLower(v: r[\"room\"]))))\r\n\r\n  |> drop(columns: [\"host\", \"gatewayId\", \"applicationName\", \"devEui\", \"deviceName\"])\r\n  |> map(fn: (r) => ({ r with type: \"RSSI\" }))\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "Spreading Factor",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": ".*batiment=\"(.*?)\".*salle=\"(.*?)\".*site=\"(.*?)\".*",
+            "renamePattern": "$2 - $1 - $3"
+          }
+        }
+      ],
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [
+    "Patrimoine",
+    "LHT65"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Relative Humidity",
+          "value": "Hum_SHT"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "MEASUREMENT",
+        "options": [
+          {
+            "selected": false,
+            "text": "Temperature",
+            "value": "TempC_SHT"
+          },
+          {
+            "selected": true,
+            "text": "Relative Humidity",
+            "value": "Hum_SHT"
+          }
+        ],
+        "query": "Temperature : TempC_SHT, Relative Humidity : Hum_SHT",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "cdqpojn08j6kgc"
+        },
+        "definition": "import \"influxdata/influxdb/schema\"\r\nimport \"strings\"\r\nimport \"array\"\r\n \r\nsites = schema.tagValues(\r\n  bucket: \"Temperature room USMB\",\r\n  tag: \"site\",\r\n  predicate: (r) => r._field == \"rssi\"\r\n    and r.applicationName == \"Temperature room USMB\"\r\n    and exists r[\"site\"],\r\n  start: v.timeRangeStart\r\n)\r\n|> map(fn: (r) => ({ r with site: strings.toLower(v: r._value) }))\r\n|> distinct(column: \"site\")\r\n\r\ndefault = array.from(rows: [{\"_value\": \"none\"}])\r\n\r\nunion(tables: [sites, default])\r\n",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "SITE",
+        "options": [],
+        "query": "import \"influxdata/influxdb/schema\"\r\nimport \"strings\"\r\nimport \"array\"\r\n \r\nsites = schema.tagValues(\r\n  bucket: \"Temperature room USMB\",\r\n  tag: \"site\",\r\n  predicate: (r) => r._field == \"rssi\"\r\n    and r.applicationName == \"Temperature room USMB\"\r\n    and exists r[\"site\"],\r\n  start: v.timeRangeStart\r\n)\r\n|> map(fn: (r) => ({ r with site: strings.toLower(v: r._value) }))\r\n|> distinct(column: \"site\")\r\n\r\ndefault = array.from(rows: [{\"_value\": \"none\"}])\r\n\r\nunion(tables: [sites, default])\r\n",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 7,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "cdqpojn08j6kgc"
+        },
+        "definition": "import \"influxdata/influxdb/schema\"\r\nimport \"strings\"\r\nimport \"array\"\r\n\r\nfrench = schema.tagValues(\r\n  bucket: \"Temperature room USMB\",\r\n  predicate: (r) => r._field == \"rssi\"\r\n    and exists r[\"site\"]\r\n    and exists r[\"batiment\"] \r\n    and contains(value: strings.toLower(v:r[\"site\"]), set: ${SITE:json}),\r\n  tag: \"batiment\",\r\n  start: v.timeRangeStart\r\n)\r\n|> map(fn: (r) => ({ r with building: strings.toLower(v: r._value) }))\r\n|> distinct(column: \"building\")\r\n\r\ndefault = array.from(rows: [{\"_value\": \"none\"}])\r\n\r\nunion(tables: [french, default])",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "BUILDING",
+        "options": [],
+        "query": "import \"influxdata/influxdb/schema\"\r\nimport \"strings\"\r\nimport \"array\"\r\n\r\nfrench = schema.tagValues(\r\n  bucket: \"Temperature room USMB\",\r\n  predicate: (r) => r._field == \"rssi\"\r\n    and exists r[\"site\"]\r\n    and exists r[\"batiment\"] \r\n    and contains(value: strings.toLower(v:r[\"site\"]), set: ${SITE:json}),\r\n  tag: \"batiment\",\r\n  start: v.timeRangeStart\r\n)\r\n|> map(fn: (r) => ({ r with building: strings.toLower(v: r._value) }))\r\n|> distinct(column: \"building\")\r\n\r\ndefault = array.from(rows: [{\"_value\": \"none\"}])\r\n\r\nunion(tables: [french, default])",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 7,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "cdqpojn08j6kgc"
+        },
+        "definition": "import \"influxdata/influxdb/schema\"\r\nimport \"strings\"\r\nimport \"array\"\r\n \r\nfrench = schema.tagValues(\r\n  bucket: \"Temperature room USMB\",\r\n  predicate: (r) => \r\n    r._field == \"rssi\"\r\n    and exists r[\"site\"]\r\n    and exists r[\"batiment\"]\r\n    and exists r[\"salle\"]\r\n    and contains(value: strings.toLower(v: r[\"site\"]), set: ${SITE:json}) \r\n    and contains(value: strings.toLower(v: r[\"batiment\"]), set: ${BUILDING:json}),\r\n  tag: \"salle\",\r\n  start: v.timeRangeStart\r\n)\r\n|> map(fn: (r) => ({ r with room: strings.toLower(v: r._value) }))\r\n|> group(columns: [\"room\"])\r\n|> distinct(column: \"room\")\r\n\r\ndefault = array.from(rows: [{\"_value\": \"none\"}])\r\n\r\nunion(tables: [french, default])\r\n",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "ROOM",
+        "options": [],
+        "query": "import \"influxdata/influxdb/schema\"\r\nimport \"strings\"\r\nimport \"array\"\r\n \r\nfrench = schema.tagValues(\r\n  bucket: \"Temperature room USMB\",\r\n  predicate: (r) => \r\n    r._field == \"rssi\"\r\n    and exists r[\"site\"]\r\n    and exists r[\"batiment\"]\r\n    and exists r[\"salle\"]\r\n    and contains(value: strings.toLower(v: r[\"site\"]), set: ${SITE:json}) \r\n    and contains(value: strings.toLower(v: r[\"batiment\"]), set: ${BUILDING:json}),\r\n  tag: \"salle\",\r\n  start: v.timeRangeStart\r\n)\r\n|> map(fn: (r) => ({ r with room: strings.toLower(v: r._value) }))\r\n|> group(columns: [\"room\"])\r\n|> distinct(column: \"room\")\r\n\r\ndefault = array.from(rows: [{\"_value\": \"none\"}])\r\n\r\nunion(tables: [french, default])\r\n",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 7,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timeRangeUpdatedDuringEditOrView": false,
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Patrimoine_Multi_Display_Tag",
+  "uid": "ddqqoh34bwf7kf",
+  "version": 33,
+  "weekStart": "monday"
+}

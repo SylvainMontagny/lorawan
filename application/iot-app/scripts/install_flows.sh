@@ -11,110 +11,115 @@ cd /usr/src/node-red/node_modules/@node-red/nodes/examples/
 apk update
 apk add jq
 
+function add_flow {
+    # Get name of file with extension, diectory and URL and optionnaly if the function should 
+    # remove the first object of the file
+    FILE=$1
+    DIR=$2
+    URL=$3
+
+    [[ "$FILE" =~ (.*).json ]]
+    NAME=${BASH_REMATCH[1]}
+
+    echo
+    echo $NAME example installation
+    echo ===============================
+    echo
+
+    if [ ! -d $DIR ]; then
+        mkdir $DIR
+    fi
+
+    if [ -f $DIR/$FILE ]; then
+        echo Update $NAME
+        rm $DIR/$FILE
+    fi
+
+    wget $URL
+
+    if [[ $4 == true ]]
+    then
+        # Remove first object to add LoRaBAC as a flow and not a new tab
+        jq '.[1:]' $FILE > cleaned_$FILE
+        rm -f $FILE
+        mv cleaned_$FILE $DIR/$FILE
+    else
+        mv $FILE $DIR/$FILE
+    fi
+}
+
 ##### TEMPLATE #####
 # ###########################################################################
 
+# URL="FLOW_URL"
+# FILE="FILE_NAME.smth"
+# DIR="DIR_NAME"
+
+# [[ "$FILE" =~ (.*).json ]]
+# NAME=${BASH_REMATCH[1]}
+
 # echo
-# echo FLOW_NAME example installation
-# echo ==============================
+# echo $NAME example installation
+# echo ===============================
 # echo
 
-# if [ ! -d FOLDER_NAME ]; then
-#     mkdir FOLDER_NAME
+# if [ ! -d $DIR ]; then
+#     mkdir $DIR
 # fi
 
-# if [ -f FOLDER_NAME/FLOW_NAME.json ]; then
-#     echo Update FLOW_NAME
-#     rm FOLDER_NAME/FLOW_NAME.json
+# if [ -f $DIR/$FILE ]; then
+#     echo Update $NAME
+#     rm $DIR/$FILE
 # fi
 
-# wget URL
+# wget $URL
+# mv $FILE $DIR/$FILE
 
 # # Remove first object to add LoRaBAC as a flow and not a new tab
-# jq '.[1:]' FLOW_NAME.json > FLOW_NAME-cleaned.json
-# rm -f FLOW_NAME.json
-# mv FLOW_NAME-cleaned.json FOLDER_NAME/FLOW_NAME.json
+# jq '.[1:]' $FILE > cleaned_$FILE
+# rm -f $FILE
+# mv cleaned_$FILE $DIR/$FILE
 
 ###########################################################################
 
-echo
-echo LoRaBAC example installation
-echo ============================
-echo
-
-if [ ! -d usmb ]; then
-    mkdir usmb
-fi
-
-if [ -f usmb/LoRaBAC.json ]; then
-    echo Update LoRaBAC
-    rm usmb/LoRaBAC.json
-fi
-
-wget https://raw.githubusercontent.com/SylvainMontagny/LoRaBAC/refs/heads/main/LoRaBAC.json
-mv LoRaBAC.json usmb/LoRaBAC.json
+add_flow "LoRaBAC.json" "bacnet" "https://raw.githubusercontent.com/SylvainMontagny/LoRaBAC/refs/heads/main/LoRaBAC.json"
 
 ###########################################################################
 
-echo
-echo lht65 example installation
-echo ==========================
-echo
-
-if [ ! -d formation-collectivites ]; then
-    mkdir formation-collectivites
-fi
-
-if [ -f formation-collectivites/lht65.json ]; then
-    echo Update lht65
-    rm formation-collectivites/lht65.json
-fi
-
-wget https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-collectivites/lht65.json
-
-# Remove first object to add LoRaBAC as a flow and not a new tab
-jq '.[1:]' lht65.json > lht65-cleaned.json
-rm -f lht65.json
-mv lht65-cleaned.json formation-collectivites/lht65.json
-
-###########################################################################
+URL="https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/bacnet/BACnet-Tests.json"
+FILE="BACnet-Tests.json"
+DIR="bacnet"
+[[ "$FILE" =~ (.*).json ]]
+NAME=${BASH_REMATCH[1]}
 
 echo
-echo mqtt_ttn example installation
-echo =============================
-echo
-
-if [ -f formation-collectivites/mqtt_ttn.json ]; then
-    echo Update mqtt_ttn
-    rm formation-collectivites/mqtt_ttn.json
-fi
-
-wget https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-collectivites/mqtt_ttn.json
-
-# Remove first object to add LoRaBAC as a flow and not a new tab
-jq '.[1:]' mqtt_ttn.json > mqtt_ttn-cleaned.json
-rm -f mqtt_ttn.json
-mv mqtt_ttn-cleaned.json formation-collectivites/mqtt_ttn.json
-
-###########################################################################
-
-echo 
-echo ttn_influxdb example installation
+echo $NAME example installation
 echo =================================
 echo
 
-if [ ! -d formation-lorawan ]; then
-    mkdir formation-lorawan
+if [ -f $DIR/$FILE ]; then
+    echo Update $NAME
+    rm $DIR/$FILE
 fi
 
-if [ -f formation-lorawan/ttn_influxdb.json ]; then
-    echo Update ttn_influxdb
-    rm formation-lorawan/ttn_influxdb.json
-fi
+wget $URL
+mv $FILE $DIR/$FILE
 
-wget https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-lorawan/ttn_influxdb.json
+###########################################################################
 
-mv ttn_influxdb.json formation-lorawan/ttn_influxdb.json
+add_flow "RestAPI-DistechControl-tests.json" "bacnet" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/bacnet/RestAPI-DistechControl-tests.json" true
+
+###########################################################################
+
+add_flow "lht65.json" "formation-collectivites" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-collectivites/lht65.json" true
+
+###########################################################################
+
+add_flow "mqtt_ttn.json" "formation-collectivites" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-collectivites/mqtt_ttn.json" true
+
+###########################################################################
+
+add_flow "ttn_influxdb.json" "formation-lorawan" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-lorawan/ttn_influxdb.json"
 
 echo
 echo "Done!"

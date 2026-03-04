@@ -1,0 +1,19 @@
+{
+	"provider1":
+	{
+		"dashboardName": "Air Quality DEV",
+		"bucket": "iot-platform",
+		"measurements": [
+            { "key": "CO2", "value": "co2_value", "unit": "ppm" },
+			{ "key": "Temperature", "value": "temperature_value", "unit": "celsius" },
+			{ "key": "Humidity", "value": "relativeHumidity_value", "unit": "percent" }
+		],
+		"variable1Name": "CAMPUS",
+		"variable2Name": "BATIMENT",
+		"variable3Name": "SALLE",
+		"datasource": "deivf3q0qa1hca",
+		"tags": ["CO2", "Generated"],
+
+		"dashboardDescription": "# Air Quality in developpment\nAir quality data caught by Carbon Nexelec sensors.\n\nThis is an automatically generated dashboard."
+	}
+}

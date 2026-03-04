@@ -1,0 +1,35 @@
+{
+	"dev":
+	{
+		"dashboardName": "Température et humidité DEV",
+		"bucket": "iot-platform",
+		"measurements": [
+			{ "key": "Temperature", "value": "TempC_SHT", "unit": "celsius" },
+			{ "key": "Humidity", "value": "Hum_SHT", "unit": "percent" },
+			{ "key": "Air Quality", "value": "Co2_SHT", "unit": "ppm" }
+		],
+		"variable1Name": "CAMPUS",
+		"variable2Name": "BATIMENT",
+		"variable3Name": "ROOM",
+		"datasource": "deivf3q0qa1hca",
+		"tags": ["LHT65", "Temperature", "Humidity", "Generated"],
+
+		"dashboardDescription": "# Temperature and Humidity in developpment\nTemperature and humidity data caught by LHT65 sensors at Technolac Campus.\n\nThis is an automatically generated dashboard."
+	},
+	"asder":
+	{
+		"dashboardName": "Température et humidité ASDER",
+		"bucket": "Temperature et qualité d'air",
+		"measurements": [
+			{ "key": "Temperature", "value": "TempC_SHT", "unit": "celsius" },
+			{ "key": "Humidity", "value": "Hum_SHT", "unit": "percent" }
+		],
+		"variable1Name": "SITE",
+		"variable2Name": "BATIMENT",
+		"variable3Name": "ROOM",
+		"datasource": "deivf3q0qa1hca",
+		"tags": ["LHT65", "Temperature", "Humidity"],
+
+		"dashboardDescription": "# Température et humidité\nLes températures et humidités de toutes les salles, captées par les capteurs LHT65."
+	}
+}

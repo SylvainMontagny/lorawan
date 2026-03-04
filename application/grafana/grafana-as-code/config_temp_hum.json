@@ -1,0 +1,34 @@
+{
+	"provider1":
+	{
+		"dashboardName": "Température et humidité provider1",
+		"bucket": "iot-platform",
+		"measurements": [
+			{ "key": "Temperature", "value": "TempC_SHT", "unit": "celsius" },
+			{ "key": "Humidity", "value": "Hum_SHT", "unit": "percent" }
+		],
+		"variable1Name": "CAMPUS",
+		"variable2Name": "BATIMENT",
+		"variable3Name": "SALLE",
+		"datasource": "deivf3q0qa1hca",
+		"tags": ["LHT65", "Temperature", "Humidity", "Generated"],
+
+		"dashboardDescription": "# Temperature and Humidity Dashboard for provider1\nTemperature and humidity data caught by LHT65 sensors.\n\nThis is an automatically generated dashboard."
+	},
+	"provider2":
+	{
+		"dashboardName": "Temperature and humidity",
+		"bucket": "BUCKET_NAME",
+		"measurements": [
+			{ "key": "Temperature", "value": "TempC_SHT", "unit": "celsius" },
+			{ "key": "Humidity", "value": "Hum_SHT", "unit": "percent" }
+		],
+		"variable1Name": "CAMPUS",
+		"variable2Name": "BUILDING",
+		"variable3Name": "ROOM",
+		"datasource": "TO_BE_MODIFIED",
+		"tags": ["LHT65", "Temperature", "Humidity", "Generated"],
+
+		"dashboardDescription": "# Temperature and Humidity Dashboard\nTemperature and humidity data caught by LHT65 sensors.\n\nThis is an automatically generated dashboard."
+	}
+}
