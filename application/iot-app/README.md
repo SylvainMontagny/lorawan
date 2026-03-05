@@ -1,9 +1,36 @@
-# iot-app
-This repository contains all the file needed for the LoRaWAN formation
+# IoT Application
+This repository contains all the file needed for the LoRaWAN training
 
-## Node RED
+# Setup
+The IoT platform is based on the following stack :
+- Node-RED
+- InfluxDB
+- Grafana
 
-### Add new example flows
+1. **Log on your server and download source files**
+    * Connect using your SSH credentials
+    * git clone the lorawan repository
+````bash
+git clone https://github.com/sylvainmontagny/lorawan
+````
+
+2. **Install the Iot stack (remove 'sudo' if necessary)**
+````bash
+cd ~/lorawan/application/iot-app
+sudo chmod -R o+w ~/lorawan/application/iot-app/node_data/
+sudo chmod -R o+w ~/lorawan/application/iot-app/grafana_data/
+sudo chown -R 1000:1000 ~/lorawan/application/iot-app/grafana_data/
+sudo docker compose up -d
+````
+3. Check the services
+    * Node-RED is available on port 1883
+    * InfluxDB is available on port 8083
+    * Grafana is available on port 3000
+
+If there are any issues with ports, you can change them to 80, 81, 82 to get access to your services within USMB network.
+
+
+# Node RED examples
 
 Edit `install_flows.sh`, add a flow based on the template available at the beginning of the document.
 Change:
@@ -20,7 +47,7 @@ Use the function `add_flow` like in the following example:
 add_flow "LoRaBAC.json" "bacnet" "URL/to/raw/LoRaBAC.json" true
 ```
 
-The last option allow you to import the exemple as a flow (`true`) or flow + tab. If the imported example is an empty flow, change this option to anything else but not true.
+The last option allow you to import the example as a flow (`true`) or flow + tab. If the imported example is an empty flow, change this option to anything else but not true.
 
 To import the json example as a flow (and not a table), make sure the first json object is a tab and keep the `jq` function. This will simply delete the first tab object.
 
