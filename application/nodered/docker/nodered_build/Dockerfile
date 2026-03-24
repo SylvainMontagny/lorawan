@@ -1,4 +1,4 @@
-FROM nodered/node-red:4.0.9
+FROM nodered/node-red:4
 RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production @flowfuse/node-red-dashboard
 RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production node-red-contrib-influxdb
 RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production node-red-contrib-bacnet
@@ -10,5 +10,6 @@ RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production @
 RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production node-red-contrib-ical-events
 RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production @montagny/node-red-contrib-lorawan-bacnet
 RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production node-bacnet
+RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production @bacnet-js/client
+RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production @bacnet-js/device
 COPY settings.js /data/settings.js
-
