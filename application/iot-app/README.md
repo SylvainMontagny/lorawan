@@ -14,7 +14,7 @@ The IoT platform is based on the following stack :
 git clone https://github.com/sylvainmontagny/lorawan
 ````
 
-2. **Install the Iot stack (remove 'sudo' if necessary)**
+2. **Install the IoT stack (remove 'sudo' if necessary)**
 ````bash
 cd ~/lorawan/application/iot-app
 sudo chmod -R o+w ~/lorawan/application/iot-app/node_data/
