@@ -1,4 +1,4 @@
-FROM nodered/node-red:4
+FROM nodered/node-red:4.1
 RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production @flowfuse/node-red-dashboard
 RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production node-red-contrib-influxdb
 RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production node-red-contrib-bacnet
