@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Packets - LoRaWAN Analyzer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="text-gray-100 min-h-screen">
+  <div class="flex flex-col h-screen">
+    <!-- Header -->
+    <header class="bg-white/5 border-b border-white/10 px-6 py-2 flex-shrink-0">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <h1 class="text-base font-bold text-white">LoRaWAN Analyzer</h1>
+          <!-- Navigation -->
+          <nav class="flex gap-1">
+            <a href="./" class="nav-link px-3 py-1 rounded text-sm">Dashboard</a>
+            <a href="gateways.html" class="nav-link px-3 py-1 rounded text-sm">Gateways</a>
+            <a href="devices.html" class="nav-link px-3 py-1 rounded text-sm">Devices</a>
+            <a href="live.html" class="nav-link active px-3 py-1 rounded text-sm">Packets</a>
+          </nav>
+          <div class="flex items-center gap-2 text-xs text-white/60">
+            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <span id="packet-count">0</span>
+          </div>
+          <div class="search-wrap">
+            <input type="text" id="search-input" placeholder="Search..." class="px-2 py-1 text-xs w-28">
+            <button id="search-clear" class="search-clear hidden" title="Clear search">&times;</button>
+          </div>
+          <select id="group-filter" class="px-2 py-1 text-xs w-24">
+            <option value="">All Groups</option>
+          </select>
+          <div class="flex items-center gap-1 text-xs text-white/60">
+            <span>RSSI</span>
+            <div class="rssi-range-wrap">
+              <input type="range" id="rssi-min" min="-140" max="-30" value="-140" class="rssi-range rssi-range-min">
+              <input type="range" id="rssi-max" min="-140" max="-30" value="-30" class="rssi-range rssi-range-max">
+            </div>
+            <span id="rssi-range-label" class="text-white/80 whitespace-nowrap" style="min-width:60px">off</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <!-- Packet Type Filter -->
+          <div class="flex items-center gap-1">
+            <button id="toggle-up" class="toggle-btn active px-2 py-1 rounded text-xs" title="Uplinks">UP</button>
+            <button id="toggle-join" class="toggle-btn active px-2 py-1 rounded text-xs" title="Join Requests">JOIN</button>
+            <button id="toggle-down" class="toggle-btn active px-2 py-1 rounded text-xs" title="Downlinks">DOWN</button>
+            <button id="toggle-ack" class="toggle-btn active px-2 py-1 rounded text-xs" title="TX Acknowledgements">ACK</button>
+          </div>
+          <div class="border-l border-white/20 h-4"></div>
+          <!-- Device Filter -->
+          <div class="flex items-center gap-2">
+            <select id="device-filter-mode" class="px-2 py-1 text-xs w-36">
+              <option value="all">All DevAddr</option>
+              <option value="owned">Known DevAddr</option>
+              <option value="foreign">Unknown DevAddr</option>
+              <option value="chirpstack">ChirpStack Devices</option>
+            </select>
+            <button id="reset-filters" class="toggle-btn px-2 py-1 rounded text-xs text-white/40 -mr-2" title="Reset all filters">Reset</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Gateway Filter -->
+    <div class="bg-white/5 border-b border-white/10 px-6 flex-shrink-0">
+      <div class="gateway-selector flex items-center gap-1 py-1">
+        <div class="gateway-tabs-scroll flex gap-1 items-center">
+          <button class="gateway-tab active px-3 py-1 rounded text-xs" data-gateway="">All Gateways</button>
+          <div id="gateway-tabs" class="flex gap-1"></div>
+        </div>
+        <div class="gateway-scroll-controls flex items-center gap-0.5 -mr-6">
+          <button id="gateway-scroll-left" class="gateway-scroll-btn px-1.5 py-1" title="Scroll left">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button id="gateway-scroll-right" class="gateway-scroll-btn px-1.5 py-1" title="Scroll right">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+          <button id="gateway-expand-btn" class="gateway-expand-btn px-2 py-1" title="Show all gateways">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Packet Feed (header + rows rendered by packet-feed.js) -->
+    <div id="live-feed-container" class="flex flex-col flex-1 min-h-0"></div>
+  </div>
+
+  <script src="utils.js"></script>
+  <script src="packet-feed.js"></script>
+  <script src="live.js"></script>
+</body>
+</html>

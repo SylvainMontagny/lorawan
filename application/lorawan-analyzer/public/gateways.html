@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitoring - LoRaWAN Analyzer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="monitoring.css">
+</head>
+<body class="text-gray-100 min-h-screen" data-view="gateways">
+  <div class="flex flex-col h-screen">
+    <!-- Header -->
+    <header class="bg-white/5 border-b border-white/10 px-6 py-2 flex-shrink-0">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <h1 class="text-base font-bold text-white">LoRaWAN Analyzer</h1>
+          <!-- Navigation -->
+          <nav class="flex gap-1">
+            <a href="./" class="nav-link px-3 py-1 rounded text-sm">Dashboard</a>
+            <a href="gateways.html" id="nav-gateways" class="nav-link px-3 py-1 rounded text-sm">Gateways</a>
+            <a href="devices.html" id="nav-devices" class="nav-link px-3 py-1 rounded text-sm">Devices</a>
+            <a href="live.html" class="nav-link px-3 py-1 rounded text-sm">Packets</a>
+          </nav>
+<div class="search-wrap">
+            <input type="text" id="search-input" placeholder="Search..." class="px-2 py-1 text-xs w-28">
+            <button id="search-clear" class="search-clear hidden" title="Clear search">&times;</button>
+          </div>
+          <select id="group-filter" class="px-2 py-1 text-xs w-24">
+            <option value="">All Groups</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-3">
+          <!-- Time Range -->
+          <div class="flex gap-1">
+            <button class="time-btn px-2 py-1 rounded text-xs" data-hours="1">1h</button>
+            <button class="time-btn px-2 py-1 rounded text-xs" data-hours="6">6h</button>
+            <button class="time-btn active px-2 py-1 rounded text-xs" data-hours="24">24h</button>
+            <button class="time-btn px-2 py-1 rounded text-xs" data-hours="168">7d</button>
+          </div>
+          <!-- Device Filter (only relevant for devices view) -->
+          <select id="device-filter-mode" class="px-2 py-1 text-xs w-36">
+            <option value="all">All DevAddr</option>
+            <option value="owned">Known DevAddr</option>
+            <option value="foreign">Unknown DevAddr</option>
+            <option value="chirpstack">ChirpStack Devices</option>
+          </select>
+          <button id="reset-filters" class="toggle-btn px-2 py-1 rounded text-xs text-white/40" title="Reset all filters">Reset</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Card grid -->
+    <div class="flex-1 overflow-auto p-4">
+      <div id="monitoring-grid" class="monitoring-grid"></div>
+      <div id="monitoring-empty" class="hidden text-center text-white/30 text-sm py-16">No results</div>
+    </div>
+  </div>
+
+  <script src="utils.js"></script>
+  <script src="monitoring.js"></script>
+</body>
+</html>

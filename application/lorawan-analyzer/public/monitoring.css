@@ -1,0 +1,136 @@
+/* Monitoring page — card grid */
+
+@keyframes flashUplink {
+  0%   { opacity: 0; }
+  5%   { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes flashUplinkRestart {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.monitoring-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ---- Base card ---- */
+.mon-card {
+  width: 12.6em;
+  border-radius: 0.75em;
+  padding: 0.5em 0.6em;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+  transition: filter 0.2s;
+  overflow: hidden;
+  text-decoration: none;
+  color: rgba(255,255,255,1);
+  font-family: monospace;
+  /* background set inline by applyCardColor */
+}
+
+.mon-card:hover {
+  filter: brightness(1.2);
+}
+
+/* Flash overlay — same approach as iot-dashboard */
+.mon-flash {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  background: rgba(255,255,255,0.25);
+}
+
+.mon-flash.active {
+  animation: flashUplink 3000ms linear;
+}
+
+.mon-flash.restart {
+  animation: flashUplinkRestart 3000ms linear;
+}
+
+/* ---- Card text elements ---- */
+.mon-alias {
+  font-size: 0.82em;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mon-name {
+  font-size: 0.7em;
+  font-weight: normal;
+  color: rgba(255,255,255,0.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mon-id {
+  font-size: 0.64em;
+  font-weight: normal;
+  color: rgba(255,255,255,0.4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mon-group {
+  font-size: 0.65em;
+  font-weight: normal;
+  color: rgba(255,255,255,0.5);
+  margin-top: 0.1em;
+}
+
+.mon-age {
+  font-size: 1.1em;
+  font-weight: normal;
+  margin-top: 0.3em;
+}
+
+.mon-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin-top: 0.25em;
+}
+
+.mon-stat-label {
+  display: block;
+  font-size: 0.58em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.4);
+  font-weight: normal;
+}
+
+.mon-stat-value {
+  font-size: 0.74em;
+  font-weight: bold;
+}
+
+.mon-operator-badge {
+  display: inline-block;
+  font-size: 0.62em;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.65);
+  margin-top: 0.15em;
+  font-weight: normal;
+}
+
+.mon-rssi {
+  font-weight: bold;
+}

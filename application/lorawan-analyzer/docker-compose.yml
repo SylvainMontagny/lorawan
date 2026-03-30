@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: timescale/timescaledb:latest-pg16
+    environment:
+      POSTGRES_DB: lorawan
+      POSTGRES_USER: lorawan
+      POSTGRES_PASSWORD: lorawan
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lorawan -d lorawan"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  analyzer:
+    build: .
+    ports:
+      - "15337:3000"
+    volumes:
+      - ./config.toml:/app/config.toml:ro
+      - ./public:/app/public:ro
+      - ./data:/app/data
+    environment:
+      CONFIG_PATH: /app/config.toml
+    networks:
+      - internal
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+networks:
+  internal:
