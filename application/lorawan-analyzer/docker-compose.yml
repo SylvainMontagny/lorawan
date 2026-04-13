@@ -19,7 +19,7 @@ services:
   analyzer:
     build: .
     ports:
-      - "15337:3000"
+      - "4000:3000"
     volumes:
       - ./config.toml:/app/config.toml:ro
       - ./public:/app/public:ro
