@@ -1,0 +1,132 @@
+[
+    {
+        "id": "e74c1b4384d3413b",
+        "type": "tab",
+        "label": "mqtt-test",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "14944295500c703b",
+        "type": "mqtt-broker",
+        "name": "Broker MQTT Univ",
+        "broker": "server1.univ-lorawan.fr",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "9aa5f6c04ead5a26",
+        "type": "mqtt in",
+        "z": "e74c1b4384d3413b",
+        "name": "",
+        "topic": "lorawan",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "14944295500c703b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 690,
+        "y": 260,
+        "wires": [
+            [
+                "f69ec3b1bb0d206e"
+            ]
+        ]
+    },
+    {
+        "id": "26006db221dcc7fd",
+        "type": "mqtt out",
+        "z": "e74c1b4384d3413b",
+        "name": "",
+        "topic": "lorawan",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "14944295500c703b",
+        "x": 500,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "f8d5afd5c2ab0b66",
+        "type": "comment",
+        "z": "e74c1b4384d3413b",
+        "name": "Broker MQTT",
+        "info": "",
+        "x": 610,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "f69ec3b1bb0d206e",
+        "type": "debug",
+        "z": "e74c1b4384d3413b",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "3e5f17112e3c6d19",
+        "type": "inject",
+        "z": "e74c1b4384d3413b",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "I love LoRaWAN !!!",
+        "payloadType": "str",
+        "x": 310,
+        "y": 260,
+        "wires": [
+            [
+                "26006db221dcc7fd"
+            ]
+        ]
+    }
+]
