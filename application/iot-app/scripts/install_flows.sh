@@ -48,76 +48,18 @@ function add_flow {
     fi
 }
 
-##### TEMPLATE #####
-# ###########################################################################
-
-# URL="FLOW_URL"
-# FILE="FILE_NAME.smth"
-# DIR="DIR_NAME"
-
-# [[ "$FILE" =~ (.*).json ]]
-# NAME=${BASH_REMATCH[1]}
-
-# echo
-# echo $NAME example installation
-# echo ===============================
-# echo
-
-# if [ ! -d $DIR ]; then
-#     mkdir $DIR
-# fi
-
-# if [ -f $DIR/$FILE ]; then
-#     echo Update $NAME
-#     rm $DIR/$FILE
-# fi
-
-# wget $URL
-# mv $FILE $DIR/$FILE
-
-# # Remove first object to add LoRaBAC as a flow and not a new tab
-# jq '.[1:]' $FILE > cleaned_$FILE
-# rm -f $FILE
-# mv cleaned_$FILE $DIR/$FILE
-
-###########################################################################
 
 add_flow "LoRaBAC.json" "bacnet" "https://raw.githubusercontent.com/SylvainMontagny/LoRaBAC/refs/heads/main/LoRaBAC.json"
 
-###########################################################################
+add_flow "BACnet-Tests.json" "bacnet" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/bacnet/BACnet-Tests.json"
 
-URL="https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/bacnet/BACnet-Tests.json"
-FILE="BACnet-Tests.json"
-DIR="bacnet"
-[[ "$FILE" =~ (.*).json ]]
-NAME=${BASH_REMATCH[1]}
+add_flow "RestAPI-DistechControl-tests.json" "bacnet" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/bacnet/RestAPI-DistechControl-tests.json"
 
-echo
-echo $NAME example installation
-echo =================================
-echo
+add_flow "lht65.json" "formation-collectivites" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-collectivites/lht65.json"
 
-if [ -f $DIR/$FILE ]; then
-    echo Update $NAME
-    rm $DIR/$FILE
-fi
+add_flow "mqtt_ttn.json" "formation-collectivites" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-collectivites/mqtt_ttn.json"
 
-wget $URL
-mv $FILE $DIR/$FILE
-
-###########################################################################
-
-add_flow "RestAPI-DistechControl-tests.json" "bacnet" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/bacnet/RestAPI-DistechControl-tests.json" true
-
-###########################################################################
-
-add_flow "lht65.json" "formation-collectivites" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-collectivites/lht65.json" true
-
-###########################################################################
-
-add_flow "mqtt_ttn.json" "formation-collectivites" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-collectivites/mqtt_ttn.json" true
-
-###########################################################################
+add_flow "mqtt_test.json" "formation-collectivites" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-collectivites/mqtt_test.json"
 
 add_flow "ttn_influxdb.json" "formation-lorawan" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-lorawan/ttn_influxdb.json"
 
