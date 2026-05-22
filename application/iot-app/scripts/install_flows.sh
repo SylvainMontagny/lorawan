@@ -8,15 +8,13 @@ fi
 # Go to examples' file
 cd /usr/src/node-red/node_modules/@node-red/nodes/examples/
 
-apk update
-apk add jq
-
 function add_flow {
     # Get name of file with extension, diectory and URL and optionnaly if the function should 
     # remove the first object of the file
-    FILE=$1
-    DIR=$2
-    URL=$3
+    FILE="$1"
+    DIR="$2"
+    URL="$3"
+    REMOVE_FIRST="${4:-false}"
 
     [[ "$FILE" =~ (.*).json ]]
     NAME=${BASH_REMATCH[1]}
@@ -26,25 +24,41 @@ function add_flow {
     echo ===============================
     echo
 
-    if [ ! -d $DIR ]; then
-        mkdir $DIR
+    if [ ! -d "$DIR" ]; then
+        mkdir -p "$DIR"
     fi
 
-    if [ -f $DIR/$FILE ]; then
+    if [ -f "$DIR/$FILE" ]; then
         echo Update $NAME
-        rm $DIR/$FILE
+        rm "$DIR/$FILE"
     fi
 
-    wget $URL
+    if ! wget -q --tries=3 --timeout=15 -O "$FILE" "$URL"; then
+        echo "WARNING: unable to download $URL"
+        echo "Check container DNS/network and retry later."
+        return 0
+    fi
 
-    if [[ $4 == true ]]
+    if [[ "$REMOVE_FIRST" == true ]]
     then
         # Remove first object to add LoRaBAC as a flow and not a new tab
-        jq '.[1:]' $FILE > cleaned_$FILE
-        rm -f $FILE
-        mv cleaned_$FILE $DIR/$FILE
+        if ! command -v jq >/dev/null 2>&1; then
+            if ! apk add --no-cache jq >/dev/null 2>&1; then
+                echo "WARNING: jq installation failed, keeping raw flow for $NAME"
+                mv "$FILE" "$DIR/$FILE"
+                return 0
+            fi
+        fi
+
+        if jq '.[1:]' "$FILE" > "cleaned_$FILE"; then
+            rm -f "$FILE"
+            mv "cleaned_$FILE" "$DIR/$FILE"
+        else
+            echo "WARNING: jq processing failed, keeping raw flow for $NAME"
+            mv "$FILE" "$DIR/$FILE"
+        fi
     else
-        mv $FILE $DIR/$FILE
+        mv "$FILE" "$DIR/$FILE"
     fi
 }
 

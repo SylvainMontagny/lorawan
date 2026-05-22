@@ -10,6 +10,9 @@ services:
     volumes:
      - ./node_data:/data
      - ./scripts:/scripts
+    dns:    # For WSL Desktop with instable DNS, use public DNS servers
+      - 1.1.1.1
+      - 8.8.8.8 
     ports:
       - "1880:1880"
     user: root
