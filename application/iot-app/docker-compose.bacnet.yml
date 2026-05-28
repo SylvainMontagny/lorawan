@@ -1,0 +1,6 @@
+# To run this addon, execute the following command :
+# docker compose -f docker-compose.yml -f docker-compose.bacnet.yml up -d nodered
+
+services:
+  nodered:
+    network_mode: "host"
