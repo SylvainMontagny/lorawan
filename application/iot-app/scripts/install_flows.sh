@@ -77,6 +77,8 @@ add_flow "mqtt_test.json" "formation-collectivites" "https://raw.githubuserconte
 
 add_flow "ttn_influxdb.json" "formation-lorawan" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-lorawan/ttn_influxdb.json"
 
+add_flow "bacnet-js-client.json" "bacnet" "https://raw.githubusercontent.com/SylvainMontagny/bacnet/refs/heads/main/bacnet-js%20client/bacnet-js-client.json"
+
 echo
 echo "Done!"
 echo
