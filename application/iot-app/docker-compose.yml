@@ -7,6 +7,7 @@ services:
   nodered:
     image: montagny/node-red:latest
     container_name: nodered
+    restart: unless-stopped
     volumes:
      - ./node_data:/data
      - ./scripts:/scripts
@@ -21,6 +22,7 @@ services:
   influxdb:
     image: influxdb:2.7.11
     container_name: influxdb
+    restart: unless-stopped
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=admin
@@ -38,6 +40,7 @@ services:
     user: "1000"
     image: grafana/grafana:11.6.0
     container_name: grafana
+    restart: unless-stopped
     volumes:
       - ./grafana_data:/var/lib/grafana
     ports:
