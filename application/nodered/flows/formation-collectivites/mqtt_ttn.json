@@ -11,12 +11,14 @@
         "id": "595f18938c100f94",
         "type": "group",
         "z": "d9fade303287df23",
+        "g": "d8f5e06ef19121a9",
         "name": "Client MQTT Subscriber",
         "style": {
             "label": true,
             "fill": "#ff7f7f",
             "fill-opacity": "0.68",
-            "color": "#000000"
+            "color": "#000000",
+            "label-position": "n"
         },
         "nodes": [
             "83f4ba2e2975704d",
@@ -31,10 +33,10 @@
         "id": "b9c4f20ed6e7fbd4",
         "type": "group",
         "z": "d9fade303287df23",
+        "g": "d8f5e06ef19121a9",
         "name": "Inject raw data",
         "style": {
             "label": true,
-            "stroke": "#a4a4a4",
             "fill": "#ffdf7f",
             "fill-opacity": "0.67",
             "color": "#000000"
@@ -53,19 +55,21 @@
         "id": "4f441ba3815d108c",
         "type": "group",
         "z": "d9fade303287df23",
+        "g": "d8f5e06ef19121a9",
         "name": "Client MQTT Publisher",
         "style": {
             "label": true,
-            "fill": "#c8e7a7",
+            "fill": "#ff7f7f",
             "fill-opacity": "0.68",
-            "color": "#000000"
+            "color": "#000000",
+            "label-position": "n"
         },
         "nodes": [
             "dd69a6315f5b25dd",
             "070552d769690792",
             "0417f5de6cf7fe02"
         ],
-        "x": 314,
+        "x": 334,
         "y": 139,
         "w": 292,
         "h": 122
@@ -74,6 +78,7 @@
         "id": "a5b50f4b925122cc",
         "type": "group",
         "z": "d9fade303287df23",
+        "g": "daca11486ed76320",
         "name": "Dashboard Send Data",
         "style": {
             "label": true,
@@ -84,38 +89,39 @@
         "nodes": [
             "0594e175ccf49c91",
             "e4336810f506913e",
-            "b26ec97777950aa2",
-            "544e435cc17a06d0"
+            "b26ec97777950aa2"
         ],
         "x": 54,
-        "y": 359,
-        "w": 452,
+        "y": 419,
+        "w": 212,
         "h": 122
     },
     {
         "id": "45713959af326cde",
         "type": "group",
         "z": "d9fade303287df23",
+        "g": "daca11486ed76320",
         "name": "Dashboard Temperature",
         "style": {
             "label": true,
             "fill": "#7fb7df",
             "fill-opacity": "0.67",
-            "color": "#000000"
+            "color": "#000000",
+            "label-position": "n"
         },
         "nodes": [
-            "1b97bb5103476e30",
             "9d63e3eaf976a181"
         ],
-        "x": 774,
-        "y": 259,
-        "w": 492,
+        "x": 974,
+        "y": 419,
+        "w": 232,
         "h": 82
     },
     {
         "id": "c15f94fb65dccfa1",
         "type": "group",
         "z": "d9fade303287df23",
+        "g": "d8f5e06ef19121a9",
         "name": "Inject encoded data",
         "style": {
             "label": true,
@@ -132,6 +138,47 @@
         "y": 219,
         "w": 212,
         "h": 122
+    },
+    {
+        "id": "d8f5e06ef19121a9",
+        "type": "group",
+        "z": "d9fade303287df23",
+        "name": "MQTT Subsciber and Publisher",
+        "style": {
+            "label": true,
+            "label-position": "n",
+            "color": "#000000"
+        },
+        "nodes": [
+            "f385b068835f90e0",
+            "595f18938c100f94",
+            "b9c4f20ed6e7fbd4",
+            "4f441ba3815d108c",
+            "c15f94fb65dccfa1"
+        ],
+        "x": 28,
+        "y": 53,
+        "w": 1204,
+        "h": 314
+    },
+    {
+        "id": "daca11486ed76320",
+        "type": "group",
+        "z": "d9fade303287df23",
+        "name": "Dashboard",
+        "style": {
+            "label": true,
+            "label-position": "n",
+            "color": "#000000"
+        },
+        "nodes": [
+            "a5b50f4b925122cc",
+            "45713959af326cde"
+        ],
+        "x": 28,
+        "y": 393,
+        "w": 1204,
+        "h": 174
     },
     {
         "id": "ad8879a305c5f1ef",
@@ -164,11 +211,10 @@
         "type": "junction",
         "z": "d9fade303287df23",
         "g": "a5b50f4b925122cc",
-        "x": 260,
-        "y": 420,
+        "x": 240,
+        "y": 480,
         "wires": [
             [
-                "544e435cc17a06d0",
                 "0417f5de6cf7fe02"
             ]
         ]
@@ -178,7 +224,7 @@
         "type": "junction",
         "z": "d9fade303287df23",
         "g": "4f441ba3815d108c",
-        "x": 340,
+        "x": 360,
         "y": 200,
         "wires": [
             [
@@ -186,6 +232,169 @@
                 "dd69a6315f5b25dd"
             ]
         ]
+    },
+    {
+        "id": "22b25a8290d52362",
+        "type": "mqtt-broker",
+        "name": "TTN",
+        "broker": "eu1.cloud.thethings.network",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "31a1de2e1b356c56",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "navigationStyle": "fixed",
+        "titleBarStyle": "fixed"
+    },
+    {
+        "id": "1448f9f5fa7929c3",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "aea0e6f7d47e0682",
+        "type": "ui-page",
+        "name": "Temperature",
+        "ui": "31a1de2e1b356c56",
+        "path": "/temperature",
+        "icon": "database",
+        "layout": "notebook",
+        "theme": "1448f9f5fa7929c3",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": 0,
+                "cols": 3
+            },
+            {
+                "name": "Tablet",
+                "px": 576,
+                "cols": 6
+            },
+            {
+                "name": "Small Desktop",
+                "px": 768,
+                "cols": 9
+            },
+            {
+                "name": "Desktop",
+                "px": 1024,
+                "cols": 12
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": true,
+        "disabled": false
+    },
+    {
+        "id": "9f90475e333fdcac",
+        "type": "ui-page",
+        "name": "Pilot your Device",
+        "ui": "31a1de2e1b356c56",
+        "path": "/pilot",
+        "icon": "cloud-arrow-up",
+        "layout": "notebook",
+        "theme": "1448f9f5fa7929c3",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 2,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "680d6c51e71257a9",
+        "type": "ui-group",
+        "name": "Data from your sensor",
+        "page": "aea0e6f7d47e0682",
+        "width": "6",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "b2efa10a218ac922",
+        "type": "ui-group",
+        "name": "Turn ON/OFF Led",
+        "page": "9f90475e333fdcac",
+        "width": "6",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
     },
     {
         "id": "83f4ba2e2975704d",
@@ -206,7 +415,7 @@
         "wires": [
             [
                 "e55c6de208d4c8d1",
-                "1b97bb5103476e30"
+                "9d63e3eaf976a181"
             ]
         ]
     },
@@ -225,7 +434,7 @@
         "correl": "",
         "expiry": "",
         "broker": "22b25a8290d52362",
-        "x": 420,
+        "x": 440,
         "y": 220,
         "wires": []
     },
@@ -369,7 +578,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 460,
+        "x": 480,
         "y": 180,
         "wires": []
     },
@@ -377,32 +586,12 @@
         "id": "f385b068835f90e0",
         "type": "comment",
         "z": "d9fade303287df23",
+        "g": "d8f5e06ef19121a9",
         "name": "Broker MQTT",
         "info": "",
         "x": 710,
         "y": 200,
         "wires": []
-    },
-    {
-        "id": "1b97bb5103476e30",
-        "type": "function",
-        "z": "d9fade303287df23",
-        "g": "45713959af326cde",
-        "name": "Format temperature",
-        "func": "if (msg.payload.hasOwnProperty(\"uplink_message\") \n    && msg.payload.uplink_message.hasOwnProperty(\"decoded_payload\")\n    && msg.payload.uplink_message.decoded_payload.hasOwnProperty(\"temperature\")) \n{\n    msg.payload = msg.payload.uplink_message.decoded_payload.temperature;\n}\nelse \n{\n    msg.payload = null;\n}\n\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "// Le code ajouté ici sera exécuté une fois\n// à chaque démarrage du noeud.\nlet msg = {};\n\nmsg[\"payload\"] = null;\n\nreturn msg;",
-        "finalize": "",
-        "libs": [],
-        "x": 900,
-        "y": 300,
-        "wires": [
-            [
-                "9d63e3eaf976a181"
-            ]
-        ]
     },
     {
         "id": "9d63e3eaf976a181",
@@ -412,11 +601,14 @@
         "name": "Temperature gauge",
         "group": "680d6c51e71257a9",
         "order": 1,
-        "width": "0",
-        "height": "0",
+        "value": "payload.uplink_message.decoded_payload.temperature",
+        "valueType": "msg",
+        "width": "6",
+        "height": "6",
         "gtype": "gauge-half",
         "gstyle": "needle",
         "title": "Temperature",
+        "alwaysShowTitle": false,
         "units": "°C",
         "icon": "",
         "prefix": "",
@@ -424,15 +616,21 @@
         "segments": [
             {
                 "from": "10",
-                "color": "#5cbed6"
+                "color": "#5cbed6",
+                "text": "",
+                "textType": "label"
             },
             {
                 "from": "17",
-                "color": "#25db00"
+                "color": "#25db00",
+                "text": "",
+                "textType": "label"
             },
             {
                 "from": "30",
-                "color": "#ea5353"
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
             }
         ],
         "min": "10",
@@ -443,9 +641,11 @@
         "styleRounded": true,
         "styleGlow": false,
         "className": "",
-        "x": 1150,
-        "y": 300,
-        "wires": []
+        "x": 1090,
+        "y": 460,
+        "wires": [
+            []
+        ]
     },
     {
         "id": "e4336810f506913e",
@@ -469,8 +669,18 @@
         "payloadType": "json",
         "topic": "topic",
         "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
         "x": 140,
-        "y": 400,
+        "y": 460,
         "wires": [
             [
                 "0594e175ccf49c91"
@@ -500,163 +710,11 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 140,
-        "y": 440,
+        "y": 500,
         "wires": [
             [
                 "0594e175ccf49c91"
             ]
         ]
-    },
-    {
-        "id": "544e435cc17a06d0",
-        "type": "ui-text",
-        "z": "d9fade303287df23",
-        "g": "a5b50f4b925122cc",
-        "group": "627ae32c90999eff",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "name": "Downlink logs",
-        "label": "",
-        "format": "{{msg.payload}}",
-        "layout": "row-spread",
-        "style": true,
-        "font": "Courier,monospace",
-        "fontSize": 16,
-        "color": "#717171",
-        "className": "",
-        "x": 400,
-        "y": 420,
-        "wires": []
-    },
-    {
-        "id": "22b25a8290d52362",
-        "type": "mqtt-broker",
-        "name": "TTN",
-        "broker": "eu1.cloud.thethings.network",
-        "port": "1883",
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": true,
-        "autoUnsubscribe": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthRetain": "false",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closeRetain": "false",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willRetain": "false",
-        "willPayload": "",
-        "willMsg": {},
-        "userProps": "",
-        "sessionExpiry": ""
-    },
-    {
-        "id": "680d6c51e71257a9",
-        "type": "ui-group",
-        "name": "Received data",
-        "page": "aea0e6f7d47e0682",
-        "width": "6",
-        "height": "1",
-        "order": 1,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false"
-    },
-    {
-        "id": "b2efa10a218ac922",
-        "type": "ui-group",
-        "name": "Publish decoded data",
-        "page": "9f90475e333fdcac",
-        "width": "6",
-        "height": "1",
-        "order": 2,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false"
-    },
-    {
-        "id": "627ae32c90999eff",
-        "type": "ui-group",
-        "name": "Downlink logs",
-        "page": "9f90475e333fdcac",
-        "width": "6",
-        "height": "1",
-        "order": 3,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false"
-    },
-    {
-        "id": "aea0e6f7d47e0682",
-        "type": "ui-page",
-        "name": "Temperature",
-        "ui": "31a1de2e1b356c56",
-        "path": "/temperature",
-        "icon": "database",
-        "layout": "notebook",
-        "theme": "1448f9f5fa7929c3",
-        "order": 1,
-        "className": "",
-        "visible": "true",
-        "disabled": "false"
-    },
-    {
-        "id": "9f90475e333fdcac",
-        "type": "ui-page",
-        "name": "Send data",
-        "ui": "31a1de2e1b356c56",
-        "path": "/send",
-        "icon": "cloud-arrow-up",
-        "layout": "notebook",
-        "theme": "1448f9f5fa7929c3",
-        "order": 2,
-        "className": "",
-        "visible": "true",
-        "disabled": "false"
-    },
-    {
-        "id": "31a1de2e1b356c56",
-        "type": "ui-base",
-        "name": "My Dashboard",
-        "path": "/dashboard",
-        "includeClientData": true,
-        "acceptsClientConfig": [
-            "ui-notification",
-            "ui-control"
-        ],
-        "showPathInSidebar": false,
-        "navigationStyle": "fixed",
-        "titleBarStyle": "fixed"
-    },
-    {
-        "id": "1448f9f5fa7929c3",
-        "type": "ui-theme",
-        "name": "Default Theme",
-        "colors": {
-            "surface": "#ffffff",
-            "primary": "#0094CE",
-            "bgPage": "#eeeeee",
-            "groupBg": "#ffffff",
-            "groupOutline": "#cccccc"
-        },
-        "sizes": {
-            "pagePadding": "12px",
-            "groupGap": "12px",
-            "groupBorderRadius": "4px",
-            "widgetGap": "12px"
-        }
     }
 ]

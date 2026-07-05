@@ -16,14 +16,15 @@
             "label": true,
             "fill": "#ff7f7f",
             "fill-opacity": "0.68",
-            "color": "#000000"
+            "color": "#000000",
+            "label-position": "n"
         },
         "nodes": [
             "1a161dd3e562dff9",
             "a8af9e4648fd855e"
         ],
-        "x": 134,
-        "y": 99,
+        "x": 414,
+        "y": 119,
         "w": 412,
         "h": 82
     },
@@ -36,15 +37,15 @@
             "label": true,
             "fill": "#7fb7df",
             "fill-opacity": "0.67",
-            "color": "#000000"
+            "color": "#000000",
+            "label-position": "n"
         },
         "nodes": [
-            "983a8675ec7a13b9",
             "6633b02de601132f"
         ],
-        "x": 114,
-        "y": 199,
-        "w": 492,
+        "x": 594,
+        "y": 219,
+        "w": 232,
         "h": 82
     },
     {
@@ -61,12 +62,12 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 220,
-        "y": 140,
+        "x": 500,
+        "y": 160,
         "wires": [
             [
                 "a8af9e4648fd855e",
-                "983a8675ec7a13b9"
+                "6633b02de601132f"
             ]
         ]
     },
@@ -84,30 +85,9 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 410,
-        "y": 140,
+        "x": 690,
+        "y": 160,
         "wires": []
-    },
-    {
-        "id": "983a8675ec7a13b9",
-        "type": "function",
-        "z": "2c7a4507895b1a6e",
-        "g": "6b3a876c3cb25b3a",
-        "name": "Format temperature",
-        "func": "if (msg.payload.hasOwnProperty(\"uplink_message\") \n    && msg.payload.uplink_message.hasOwnProperty(\"decoded_payload\")\n    && msg.payload.uplink_message.decoded_payload.hasOwnProperty(\"TempC_SHT\")) \n{\n    msg.payload = msg.payload.uplink_message.decoded_payload.TempC_SHT;\n}\nelse \n{\n    msg.payload = null;\n}\n\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "// Le code ajouté ici sera exécuté une fois\n// à chaque démarrage du noeud.\nlet msg = {};\n\nmsg[\"payload\"] = null;\n\nreturn msg;",
-        "finalize": "",
-        "libs": [],
-        "x": 240,
-        "y": 240,
-        "wires": [
-            [
-                "6633b02de601132f"
-            ]
-        ]
     },
     {
         "id": "6633b02de601132f",
@@ -117,11 +97,14 @@
         "name": "Temperature gauge",
         "group": "68a7c95de07f66bd",
         "order": 1,
-        "width": "0",
-        "height": "0",
+        "value": "payload.uplink_message.decoded_payload.TempC_SHT",
+        "valueType": "msg",
+        "width": "6",
+        "height": "6",
         "gtype": "gauge-half",
         "gstyle": "needle",
-        "title": "Temperature",
+        "title": "Temperature LHT65",
+        "alwaysShowTitle": false,
         "units": "°C",
         "icon": "",
         "prefix": "",
@@ -129,15 +112,21 @@
         "segments": [
             {
                 "from": "10",
-                "color": "#5cbed6"
+                "color": "#5cbed6",
+                "text": "",
+                "textType": "label"
             },
             {
                 "from": "17",
-                "color": "#25db00"
+                "color": "#25db00",
+                "text": "",
+                "textType": "label"
             },
             {
                 "from": "30",
-                "color": "#ea5353"
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
             }
         ],
         "min": "10",
@@ -148,9 +137,11 @@
         "styleRounded": true,
         "styleGlow": false,
         "className": "",
-        "x": 490,
-        "y": 240,
-        "wires": []
+        "x": 710,
+        "y": 260,
+        "wires": [
+            []
+        ]
     },
     {
         "id": "22b25a8290d52362",
@@ -186,7 +177,7 @@
     {
         "id": "68a7c95de07f66bd",
         "type": "ui-group",
-        "name": "Temperature LHT65",
+        "name": "Data from your sensor",
         "page": "cf9d85bea3423d91",
         "width": "6",
         "height": "1",
@@ -194,7 +185,8 @@
         "showTitle": true,
         "className": "",
         "visible": "true",
-        "disabled": "false"
+        "disabled": "false",
+        "groupType": "default"
     },
     {
         "id": "cf9d85bea3423d91",
@@ -205,7 +197,29 @@
         "icon": "database",
         "layout": "notebook",
         "theme": "1448f9f5fa7929c3",
-        "order": 3,
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -215,14 +229,20 @@
         "type": "ui-base",
         "name": "My Dashboard",
         "path": "/dashboard",
+        "appIcon": "",
         "includeClientData": true,
         "acceptsClientConfig": [
             "ui-notification",
             "ui-control"
         ],
         "showPathInSidebar": false,
+        "headerContent": "page",
         "navigationStyle": "fixed",
-        "titleBarStyle": "fixed"
+        "titleBarStyle": "fixed",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 5,
+        "showDisconnectNotification": true,
+        "allowInstall": true
     },
     {
         "id": "1448f9f5fa7929c3",
