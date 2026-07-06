@@ -63,11 +63,17 @@ function add_flow {
 }
 
 
-add_flow "LoRaBAC.json" "bacnet" "https://raw.githubusercontent.com/SylvainMontagny/LoRaBAC/refs/heads/main/LoRaBAC.json"
+add_flow "LoRaBAC.json" "lorawan-bacnet" "https://raw.githubusercontent.com/SylvainMontagny/LoRaBAC/refs/heads/main/LoRaBAC.json"
 
-add_flow "BACnet-Tests.json" "bacnet" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/bacnet/BACnet-Tests.json"
+add_flow "Ical-To-Schedule.json" "lorawan-bacnet" "https://raw.githubusercontent.com/SylvainMontagny/ical-to-schedule/refs/heads/main/Ical-To-Schedule.json"
 
-add_flow "RestAPI-DistechControl-tests.json" "bacnet" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/bacnet/RestAPI-DistechControl-tests.json"
+add_flow "bacnet-js-client.json" "lorawan-bacnet" "https://raw.githubusercontent.com/SylvainMontagny/bacnet/refs/heads/main/bacnet-js%20client/bacnet-js-client.json"
+
+add_flow "distech_service_setup.json" "lorawan-bacnet" "https://raw.githubusercontent.com/SylvainMontagny/distech-controls/refs/heads/main/distech_service_setup.json"
+
+add_flow "bacnet_create_30_analogvalues.json" "lorawan-bacnet" "https://raw.githubusercontent.com/SylvainMontagny/distech-controls/refs/heads/main/bacnet_create_30_analogvalues.json"
+
+add_flow "LoRaWAN-Modbus.json" "lorawan-modbus" "https://raw.githubusercontent.com/SylvainMontagny/modbus/refs/heads/main/LoRaWAN-Modbus.json"
 
 add_flow "lht65.json" "formation-collectivites" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-collectivites/lht65.json"
 
@@ -77,7 +83,7 @@ add_flow "mqtt_test.json" "formation-collectivites" "https://raw.githubuserconte
 
 add_flow "ttn_influxdb.json" "formation-lorawan" "https://raw.githubusercontent.com/SylvainMontagny/lorawan/refs/heads/main/application/nodered/flows/formation-lorawan/ttn_influxdb.json"
 
-add_flow "bacnet-js-client.json" "bacnet" "https://raw.githubusercontent.com/SylvainMontagny/bacnet/refs/heads/main/bacnet-js%20client/bacnet-js-client.json"
+
 
 echo
 echo "Done!"
