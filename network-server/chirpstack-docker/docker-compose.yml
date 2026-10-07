@@ -15,8 +15,25 @@ services:
       - REDIS_HOST=redis
       - POSTGRESQL_HOST=postgres
     ports:
-      - "8080:8080" #Gui
-      - "9000:9000" #Backend Interface
+      - "9000:9000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.chirpstackweb.rule=Host(`${DOMAIN_NAME:?Set DOMAIN_NAME in traefik/.env}`)"
+      - "traefik.http.routers.chirpstackweb.entrypoints=chirpstacksecure"
+      - "traefik.http.routers.chirpstackweb.tls=true"
+      - "traefik.http.routers.chirpstackweb.tls.certresolver=myresolver"
+      - "traefik.http.routers.chirpstackweb.service=chirpstackweb"
+      - "traefik.http.services.chirpstackweb.loadbalancer.server.port=8080"
+      - "traefik.http.routers.chirpstack-grpc.rule=Host(`${DOMAIN_NAME:?Set DOMAIN_NAME in traefik/.env}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.chirpstack-grpc.entrypoints=chirpstacksecure"
+      - "traefik.http.routers.chirpstack-grpc.tls.certresolver=myresolver"
+      - "traefik.http.routers.chirpstack-grpc.service=chirpstack-grpc"
+      - "traefik.http.services.chirpstack-grpc.loadbalancer.server.port=8080"
+      - "traefik.http.services.chirpstack-grpc.loadbalancer.server.scheme=h2c"
+    networks:
+      - default
+      - traefik
 
   chirpstack-gateway-bridge:
     image: chirpstack/chirpstack-gateway-bridge:4.1.1
@@ -50,10 +67,18 @@ services:
     container_name: chirpstack-rest-api
     restart: unless-stopped
     command: --server chirpstack:8080 --bind 0.0.0.0:8090 --insecure
-    ports:
-      - "8090:8090"
     depends_on:
       - chirpstack
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.chirpstack-api.rule=Host(`${DOMAIN_NAME:?Set DOMAIN_NAME in traefik/.env}`) && PathPrefix(`/swagger`)"
+      - "traefik.http.routers.chirpstack-api.entrypoints=chirpstacksecure"
+      - "traefik.http.routers.chirpstack-api.tls.certresolver=myresolver"
+      - "traefik.http.services.chirpstack-api.loadbalancer.server.port=8090"
+    networks:
+      - default
+      - traefik
 
   postgres:
     image: postgres:14-alpine
@@ -79,11 +104,24 @@ services:
     image: eclipse-mosquitto:2.0.22
     container_name: chirpstack-mosquitto
     restart: unless-stopped
-    ports:
-      - "1883:1883"
     volumes: 
       - ./configuration/mosquitto/config/:/mosquitto/config/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.tcp.routers.mosquitto.rule=HostSNI(`${DOMAIN_NAME:?Set DOMAIN_NAME in traefik/.env}`)"
+      - "traefik.tcp.routers.mosquitto.entrypoints=mqttsecure"
+      - "traefik.tcp.routers.mosquitto.tls.certresolver=myresolver"
+      - "traefik.tcp.services.mosquitto.loadbalancer.server.port=1883"
+    networks:
+      - default
+      - traefik
 
 volumes:
   postgresqldata:
   redisdata:
+
+networks:
+  traefik:
+    external: true
+    name: traefik

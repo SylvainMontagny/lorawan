@@ -14,10 +14,18 @@ services:
     dns:    # For WSL Desktop with instable DNS, use public DNS servers
       - 1.1.1.1
       - 8.8.8.8 
-    ports:
-      - "1880:1880"
     user: root
     entrypoint: [ "bash", "/scripts/entrypoint.sh" ] 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.nodered.rule=Host(`${DOMAIN_NAME:?Set DOMAIN_NAME in traefik/.env}`)"
+      - "traefik.http.routers.nodered.entrypoints=websecure"
+      - "traefik.http.routers.nodered.tls.certresolver=myresolver"
+      - "traefik.http.services.nodered.loadbalancer.server.port=1880"
+    networks:
+      - default
+      - traefik
       
   influxdb:
     image: influxdb:2.7.11
@@ -33,8 +41,16 @@ services:
       - TZ=Europe/Paris
     volumes:
       - ./influx_data:/var/lib/influxdb2:rw
-    ports:
-      - "8086:8086"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.influxdb.rule=Host(`${DOMAIN_NAME:?Set DOMAIN_NAME in traefik/.env}`)"
+      - "traefik.http.routers.influxdb.entrypoints=influxsecure"
+      - "traefik.http.routers.influxdb.tls.certresolver=myresolver"
+      - "traefik.http.services.influxdb.loadbalancer.server.port=8086"
+    networks:
+      - default
+      - traefik
          
   grafana:
     user: "1000"
@@ -43,11 +59,25 @@ services:
     restart: unless-stopped
     volumes:
       - ./grafana_data:/var/lib/grafana
-    ports:
-      - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=univ-lorawan  
+      - GF_SECURITY_ADMIN_PASSWORD=univ-lorawan
+      - GF_SERVER_ROOT_URL=https://${DOMAIN_NAME:?Set DOMAIN_NAME in traefik/.env}:3000/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.grafana.rule=Host(`${DOMAIN_NAME:?Set DOMAIN_NAME in traefik/.env}`)"
+      - "traefik.http.routers.grafana.entrypoints=grafanasecure"
+      - "traefik.http.routers.grafana.tls.certresolver=myresolver"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+    networks:
+      - default
+      - traefik
+
+networks:
+  traefik:
+    external: true
+    name: traefik
        
 
 
